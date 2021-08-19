@@ -1,77 +1,153 @@
-import React from "react";
+import React, { useState } from 'react';
 import {
-  TextField,
-  makeStyles,
-  Button,
   Typography,
-  alpha,
-} from "@material-ui/core";
+  FormControl,
+  FilledInput,
+  InputLabel,
+  InputAdornment,
+  IconButton,
+  Box,
+  FormHelperText,
+} from '@material-ui/core';
 
-// css
-// khi muon su dung css thi khai bao nhu nay
-const useStyles = makeStyles((theme) => ({
-  root: {
-    minHeight: "100vh",
-    background:
-      "url(https://se20.netlify.app/static/media/login-background.b76a6aa2.jpg)",
-    paddingTop: "20vh",
-  },
-  // object dat ten gi cung duoc
-  form: {
-    maxWidth: "30rem",
-    margin: "0 auto 0",
-    padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadius,
-    border: "1px solid #333",
-    background: alpha("#000", 0.7),
-  },
-  title: {
-    marginBottom: theme.spacing(3),
-    textAlign: "center",
-    color: "#fff",
-  },
-  textField: {
-    color: "#333",
-  },
-}));
+import useStyles from './Login.styles';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Link } from 'react-router-dom';
+import { useInput } from '../../hooks/user-input';
+import { passwordschema, usernameSchema } from '../../schemas';
+import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 
 function Login() {
-  // khoi tao o day
   const classes = useStyles();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
+  const {
+    enteredInput: username,
+    inputBlurHandler: usernameBlurHandler,
+    inputChangeHandler: usernameChangeHandler,
+    inputReset: usernameReset,
+    inputIsValid: usernameIsvalid,
+    hasError: usernameHasError,
+    errorMsg: usernameErrorMessage,
+  } = useInput(usernameSchema);
+
+  const {
+    enteredInput: password,
+    inputBlurHandler: passwordBlurHandler,
+    inputChangeHandler: passwordChangeHandler,
+    inputReset: passwordReset,
+    inputIsValid: passwordIsvalid,
+    hasError: passwordHasError,
+    errorMsg: passwordErrorMessage,
+  } = useInput(passwordschema);
+
+  const formIsValid = usernameIsvalid && passwordIsvalid;
+
+  const toggleShowPasswordHandler = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+  const mouseDownPasswordHandler = (event) => {
+    event.preventDefault();
+  };
+
+  const formSubmitHandler = (e) => {
+    e.preventDefault();
+    if (!formIsValid) {
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+
+      alert('login');
+      usernameReset();
+      passwordReset();
+    }, 2000);
+  };
   return (
     <div className={classes.root}>
       <div>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={formSubmitHandler}>
           <Typography variant="h6" className={classes.title}>
             Login form
           </Typography>
-          <TextField
-            error={false}
-            id="outlined-error-helper-text"
-            label="Username"
-            helperText={false && "Please enter a valid username"}
-            variant="outlined"
-            fullWidth
-            size="small"
-            margin="dense"
-            className={classes.textField}
-          />
-          <TextField
-            error={false}
-            id="outlined-error-helper-text"
-            label="Password"
-            type="password"
-            helperText={false && "Please enter a valid password"}
-            variant="outlined"
-            fullWidth
-            size="small"
-            margin="dense"
-            className={classes.textField}
-          />
-          <Button variant="contained" color="primary" fullWidth>
+          <div className={classes.formControl}>
+            <FormControl
+              error={usernameHasError}
+              variant="filled"
+              fullWidth
+              className={classes.textField}>
+              <InputLabel htmlFor="username" className={classes.inputLabel}>
+                Username
+              </InputLabel>
+              <FilledInput
+                value={username}
+                onBlur={usernameBlurHandler}
+                onChange={usernameChangeHandler}
+                id="username"
+                type="text"
+              />
+            </FormControl>
+            {usernameHasError && (
+              <FormHelperText className={classes.errorMessage}>
+                {usernameErrorMessage}
+              </FormHelperText>
+            )}
+          </div>
+
+          <div className={classes.formControl}>
+            <FormControl
+              error={passwordHasError}
+              className={classes.textField}
+              variant="filled"
+              fullWidth>
+              <InputLabel htmlFor="password" className={classes.inputLabel}>
+                Password
+              </InputLabel>
+              <FilledInput
+                value={password}
+                onBlur={passwordBlurHandler}
+                onChange={passwordChangeHandler}
+                id="password"
+                type={showPassword ? 'text' : 'password'}
+                className={classes.inputField}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      edge="end"
+                      onClick={toggleShowPasswordHandler}
+                      onMouseDown={mouseDownPasswordHandler}>
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+
+            {passwordHasError && (
+              <FormHelperText className={classes.errorMessage}>
+                {passwordErrorMessage}
+              </FormHelperText>
+            )}
+          </div>
+          <ButtonLoading
+            size="large"
+            isLoading={isLoading}
+            type="submit"
+            disabled={!formIsValid}>
             Login
-          </Button>
+          </ButtonLoading>
+
+          <Box display="flex" flexWrap="wrap" alignItems="center">
+            <Typography variant="body2" className={classes.textHelper}>
+              Don't have an account? <Link to="/register">Register</Link>
+            </Typography>
+            <Typography variant="body2" className={classes.textHelper}>
+              <Link to="/forgot-password">Forgot password?</Link>
+            </Typography>
+          </Box>
         </form>
       </div>
     </div>

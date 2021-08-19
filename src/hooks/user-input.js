@@ -1,9 +1,20 @@
 import { useEffect, useState } from 'react';
+const Joi = require('joi');
 
-export const useInput = (validateFn, initialState = '') => {
+export const useInput = (schemaJson = null, initialState = '') => {
   const [enteredInput, setEnteredInput] = useState(initialState);
   const [isTouched, setIsTouched] = useState(false);
-  const inputIsValid = validateFn(enteredInput);
+  let inputIsValid = true;
+
+  let errorMsg = null;
+  if (schemaJson) {
+    const schema = Joi.object(schemaJson);
+    const { error } = schema.validate({ value: enteredInput });
+    if (error) {
+      errorMsg = error.toString();
+      inputIsValid = false;
+    }
+  }
 
   const hasError = !inputIsValid && isTouched;
   const inputChangeHandler = (e) => {
@@ -29,5 +40,6 @@ export const useInput = (validateFn, initialState = '') => {
     inputBlurHandler,
     inputReset,
     setEnteredInput,
+    errorMsg,
   };
 };

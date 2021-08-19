@@ -1,14 +1,18 @@
-import { Route, Switch } from "react-router-dom";
-import "antd/dist/antd.css";
-import Header from "./components/Layouts/Header/Header";
-import Login from "./pages/Login/Login";
-import { createTheme, ThemeProvider } from "@material-ui/core";
+import { Route, Switch } from 'react-router-dom';
+import Header from './components/Layouts/Header/Header';
+import Login from './pages/Login/Login';
+import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
+import Footer from './components/Layouts/Footer/Footer';
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#E30812",
-      contrastText: "#fff",
+      main: '#E30812',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#131722',
+      contrastText: '#fff',
     },
   },
 });
@@ -16,6 +20,7 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Header />
       <Switch>
         <Route path="/" exact>
@@ -26,7 +31,7 @@ function App() {
         </Route>
         <Route path="*">404 NOT FOUND</Route>
       </Switch>
-      <footer>This is footer</footer>
+      <Footer />
     </ThemeProvider>
   );
 }
