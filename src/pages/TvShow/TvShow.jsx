@@ -1,5 +1,5 @@
 import { Container, Grid } from '@material-ui/core';
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import MovieItem from '../../components/MovieItem/MovieItem';
 
 const listMovie = [
@@ -33,18 +33,24 @@ const listMovie = [
 ];
 
 function TvShow() {
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
-    <div style={{ height: '100vh', padding: '20vh 0', background: '#000' }}>
+    <div style={{ minHeight: '100vh', padding: '20vh 0', background: '#000' }}>
       <Container>
         <Grid container spacing={2}>
           {listMovie.map((movie, index) => (
             <Grid item xs={6} sm={4} md={3} lg={2}>
-              <MovieItem
-                title={movie.title}
-                image={movie.image}
-                description={movie.description}
-                genres={movie.genres}
-              />
+              <React.Fragment key={index}>
+                <MovieItem
+                  id={movie.id}
+                  title={movie.title}
+                  image={movie.image}
+                  description={movie.description}
+                  genres={movie.genres}
+                />
+              </React.Fragment>
             </Grid>
           ))}
         </Grid>
