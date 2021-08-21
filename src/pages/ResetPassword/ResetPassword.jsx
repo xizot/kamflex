@@ -10,52 +10,27 @@ import {
   FormHelperText,
 } from '@material-ui/core';
 
-import useStyles from './RegisterStyle';
+import useStyles from './ResetPassword.styles';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { useInput } from '../../hooks/user-input';
-import {
-  passwordschema,
-  usernameSchema,
-  emailSchema,
-  displaynameSchema,
-  confirmpasswordSchema,
-} from '../../schemas';
+import { passwordschema, recoveryCodeSchema, confirmpasswordSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 
-function Register() {
+function ResetPassword() {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    enteredInput: username,
-    inputBlurHandler: usernameBlurHandler,
-    inputChangeHandler: usernameChangeHandler,
-    inputReset: usernameReset,
-    inputIsValid: usernameIsvalid,
-    hasError: usernameHasError,
-    errorMsg: usernameErrorMessage,
-  } = useInput(usernameSchema);
-
-  const {
-    enteredInput: email,
-    inputBlurHandler: emailBlurHandler,
-    inputChangeHandler: emailChangeHandler,
-    inputReset: emailReset,
-    inputIsValid: emailIsvalid,
-    hasError: emailHasError,
-    errorMsg: emailErrorMessage,
-  } = useInput(emailSchema);
-
-  const {
-    enteredInput: displayname,
-    inputBlurHandler: displaynameBlurHandler,
-    inputChangeHandler: displaynameChangeHandler,
-    inputReset: displaynameReset,
-    hasError: displaynameHasError,
-    errorMsg: displaynameErrorMessage,
-  } = useInput(displaynameSchema);
+    enteredInput: recoveryCode,
+    inputBlurHandler: recoveryCodeBlurHandler,
+    inputChangeHandler: recoveryCodeChangeHandler,
+    inputReset: recoveryCodeReset,
+    inputIsValid: recoveryCodeIsvalid,
+    hasError: recoveryCodeHasError,
+    errorMsg: recoveryCodeErrorMessage,
+  } = useInput(recoveryCodeSchema);
 
   const {
     enteredInput: password,
@@ -77,7 +52,7 @@ function Register() {
     errorMsg: confirmpasswordErrorMessage,
   } = useInput(confirmpasswordSchema);
 
-  const formIsValid = usernameIsvalid && emailIsvalid && passwordIsvalid && confirmpasswordIsvalid;
+  const formIsValid = recoveryCodeIsvalid && passwordIsvalid && confirmpasswordIsvalid;
 
   const toggleShowPasswordHandler = () => {
     setShowPassword((prevState) => !prevState);
@@ -95,10 +70,8 @@ function Register() {
     setTimeout(() => {
       setIsLoading(false);
 
-      alert('register');
-      usernameReset();
-      emailReset();
-      displaynameReset();
+      alert('resetPassword');
+      recoveryCodeReset();
       passwordReset();
       confirmpasswordReset();
     }, 2000);
@@ -108,74 +81,28 @@ function Register() {
       <div>
         <form className={classes.form} onSubmit={formSubmitHandler}>
           <Typography variant="h6" className={classes.title}>
-            Register
+            Reset Password
           </Typography>
           <div className={classes.formControl}>
             <FormControl
-              error={usernameHasError}
+              error={recoveryCodeHasError}
               variant="filled"
               fullWidth
               className={classes.textField}>
-              <InputLabel htmlFor="username" className={classes.inputLabel}>
-                Username
+              <InputLabel htmlFor="recoveryCode" className={classes.inputLabel}>
+                RecoveryCode
               </InputLabel>
               <FilledInput
-                value={username}
-                onBlur={usernameBlurHandler}
-                onChange={usernameChangeHandler}
-                id="username"
+                value={recoveryCode}
+                onBlur={recoveryCodeBlurHandler}
+                onChange={recoveryCodeChangeHandler}
+                id="recoveryCode"
                 type="text"
               />
             </FormControl>
-            {usernameHasError && (
+            {recoveryCodeHasError && (
               <FormHelperText className={classes.errorMessage}>
-                {usernameErrorMessage}
-              </FormHelperText>
-            )}
-          </div>
-
-          <div className={classes.formControl}>
-            <FormControl
-              error={emailHasError}
-              variant="filled"
-              fullWidth
-              className={classes.textField}>
-              <InputLabel htmlFor="email" className={classes.inputLabel}>
-                Email
-              </InputLabel>
-              <FilledInput
-                value={email}
-                onBlur={emailBlurHandler}
-                onChange={emailChangeHandler}
-                id="email"
-                type="text"
-              />
-            </FormControl>
-            {emailHasError && (
-              <FormHelperText className={classes.errorMessage}>{emailErrorMessage}</FormHelperText>
-            )}
-          </div>
-
-          <div className={classes.formControl}>
-            <FormControl
-              error={displaynameHasError}
-              variant="filled"
-              fullWidth
-              className={classes.textField}>
-              <InputLabel htmlFor="displayname" className={classes.inputLabel}>
-                displayname
-              </InputLabel>
-              <FilledInput
-                value={displayname}
-                onBlur={displaynameBlurHandler}
-                onChange={displaynameChangeHandler}
-                id="displayname"
-                type="text"
-              />
-            </FormControl>
-            {displaynameHasError && (
-              <FormHelperText className={classes.errorMessage}>
-                {displaynameErrorMessage}
+                {recoveryCodeErrorMessage}
               </FormHelperText>
             )}
           </div>
@@ -255,12 +182,12 @@ function Register() {
           </div>
 
           <ButtonLoading size="large" isLoading={isLoading} type="submit" disabled={!formIsValid}>
-            Register
+            Confirm
           </ButtonLoading>
 
-          <Box display="flex" justifyContent="flex-end">
+          <Box display="flex" flexWrap="wrap" alignItems="center">
             <Typography variant="body2" className={classes.textHelper}>
-              <Link to="/login">Already have an account?</Link>
+              <Link to="/forgot-password">Back</Link>
             </Typography>
           </Box>
         </form>
@@ -269,4 +196,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default ResetPassword;

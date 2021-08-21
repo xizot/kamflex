@@ -1,6 +1,9 @@
 import { Route, Switch } from 'react-router-dom';
 import Header from './components/Layouts/Header/Header';
 import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
+import ResetPassword from './pages/ResetPassword/ResetPassword';
 import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import Footer from './components/Layouts/Footer/Footer';
 
@@ -28,6 +31,15 @@ function App() {
         </Route>
         <Route path="/login" exact>
           <Login />
+        </Route>
+        <Route path="/register" exact>
+          <Register />
+        </Route>
+        <Route path="/forgot-password" exact>
+          <ForgotPassword />
+        </Route>
+        <Route path="/reset-password" exact>
+          <ResetPassword />
         </Route>
         <Route path="*">404 NOT FOUND</Route>
       </Switch>
