@@ -10,7 +10,10 @@ import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import Footer from './components/Layouts/Footer/Footer';
 import TvShow from './pages/TvShow/TvShow';
 import Movie from './pages/Movie/Movie';
-
+import MovieDetail from './pages/MovieDetail/MovieDetail';
+import aos from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from 'react';
 const theme = createTheme({
   palette: {
     primary: {
@@ -25,6 +28,12 @@ const theme = createTheme({
 });
 
 function App() {
+  useEffect(() => {
+    aos.init({
+      offset: 150,
+    });
+    aos.refresh();
+  }, []);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -53,6 +62,9 @@ function App() {
         </Route>
         <Route path="/reset-password" exact>
           <ResetPassword />
+        </Route>
+        <Route path="/movie/:id" exact>
+          <MovieDetail />
         </Route>
         <Route path="*">404 NOT FOUND</Route>
       </Switch>

@@ -133,12 +133,13 @@ const listMovie = [
 
 function Home() {
   return (
-    <div style={{ height: '100vh', padding: '20vh 0', background: '#000' }}>
+    <div style={{ minHeight: '100vh', padding: '20vh 0', background: '#000' }}>
       <Container>
         <Grid container spacing={2}>
           {listMovie.map((movie, index) => (
-            <Grid item xs={6} sm={4} md={3} lg={2}>
+            <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
               <MovieItem
+                id={movie.id}
                 title={movie.title}
                 image={movie.image}
                 description={movie.description}

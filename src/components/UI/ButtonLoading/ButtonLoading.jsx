@@ -3,6 +3,7 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    display: 'block',
     '&.Mui-disabled': {
       background: '#ddd',
       cursort: 'not-allowed',
