@@ -29,7 +29,7 @@ const theme = createTheme({
 function App() {
   useEffect(() => {
     aos.init({
-      offset: 150,
+      offset: 120,
     });
     aos.refresh();
   }, []);

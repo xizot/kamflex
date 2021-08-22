@@ -7,6 +7,7 @@ export default makeStyles((theme) => ({
     paddingBottom: '20vh',
     background: theme.palette.secondary.main,
   },
+
   poster: {
     borderRadius: theme.shape.borderRadius,
     width: 350,
@@ -36,8 +37,10 @@ export default makeStyles((theme) => ({
   title: {
     marginBottom: theme.spacing(1),
     fontWeight: 'bold',
+    lineHeight: 1.3,
     [theme.breakpoints.down('xs')]: {
       fontSize: 30,
+      lineHeight: 1.2,
     },
   },
   moreInfo: {
@@ -65,7 +68,13 @@ export default makeStyles((theme) => ({
   time: {
     fontWeight: 'bold',
   },
-  description: {
+  section: {
+    padding: theme.spacing(5, 0),
+    [theme.breakpoints.down('xs')]: {
+      padding: theme.spacing(3, 0),
+    },
+  },
+  content: {
     padding: theme.spacing(0, 20),
     [theme.breakpoints.down('sm')]: {
       padding: theme.spacing(0, 7),
@@ -74,8 +83,35 @@ export default makeStyles((theme) => ({
       padding: theme.spacing(0),
     },
   },
-  content: {
+  description: {
+    borderBottom: '1px solid #bebebe',
+  },
+  descriptionContent: {
     color: '#9CABB6',
     lineHeight: 1.8,
+  },
+  playerWrapper: {
+    position: 'relative',
+    paddingTop: '56.25%',
+    borderRadius: theme.shape.borderRadius,
+    overflow: 'hidden',
+  },
+  subtitle: {
+    marginBottom: theme.spacing(1),
+  },
+  commentBox: {
+    marginBottom: theme.spacing(1),
+  },
+  inputComment: {
+    marginBottom: theme.spacing(1),
+    background: '#fff',
+    borderRadius: theme.shape.borderRadius,
+    overflow: 'hidden',
+  },
+  btnPostComment: {
+    marginBottom: theme.spacing(2),
+    display: 'block',
+    marginLeft: 'auto',
+    minWidth: 100,
   },
 }));

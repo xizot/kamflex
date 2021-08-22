@@ -3,14 +3,17 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    border: (props) => (props?.color ? `3px solid ${props?.color}` : `3px solid #fff`),
     position: 'relative',
+    width: 40,
+    height: 40,
+    padding: theme.spacing(1),
+    [theme.breakpoints.down('md')]: {
+      height: 35,
+      width: 35,
+    },
     '&:hover $label': {
       display: 'block',
-    },
-    [theme.breakpoints.down('sm')]: {
-      height: 30,
-      width: 30,
-      padding: 10,
     },
   },
   label: {
@@ -19,12 +22,12 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     minWidth: 'max-content',
     left: '50%',
-    transform: 'translate(-50%, -100%)',
+    transform: 'translate(-50%, calc(-100% - 12px))',
     background: 'white',
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(0.2, 1),
     color: '#000',
-    border: '1px solid #777',
+    border: '1px solid #cecece',
     '&:before': {
       content: "''",
       position: 'absolute',
@@ -48,29 +51,31 @@ const useStyles = makeStyles((theme) => ({
       borderWidth: 7,
       borderStyle: 'solid',
       borderColor: 'transparent',
-      borderTopColor: '#777',
+      borderTopColor: '#cecece',
       zIndex: 1,
     },
   },
   icon: {
-    color: (props) => (props?.color ? props?.color : '#ddd'),
-    [theme.breakpoints.down('sm')]: {
+    color: (props) => (props?.color ? props?.color : '#fff'),
+    [theme.breakpoints.down('md')]: {
       height: 20,
       width: 20,
     },
   },
 }));
 
-function IconLabel({ Icon, label, onClick, size, color, ...props }) {
-  const classes = useStyles({ color });
+function IconLabel({ Icon, label, onClick, size, color, classes, ...props }) {
+  const styles = useStyles({ color });
 
   return (
-    <IconButton className={classes.root} onClick={onClick} size={size} {...props}>
-      <Typography variant="caption" className={classes.label}>
-        {label}
-      </Typography>
-      <Icon className={classes.icon} />
-    </IconButton>
+    <div className={classes?.root}>
+      <IconButton className={styles.root} onClick={onClick} size={size} {...props}>
+        <Typography variant="caption" className={styles.label}>
+          {label}
+        </Typography>
+        <Icon className={styles.icon} />
+      </IconButton>
+    </div>
   );
 }
 

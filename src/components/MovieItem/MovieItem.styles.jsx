@@ -66,11 +66,12 @@ export default makeStyles((theme) => ({
     },
   },
   hoverSection: {
+    color: '#fff',
     position: 'absolute',
     top: '50%',
     left: '50%',
     width: 300,
-    background: '#fff',
+    background: theme.palette.secondary.main,
     transform: 'translate(-50%,-50%)',
     borderRadius: theme.shape.borderRadius,
     boxShadow: '0px 2px 8px rgba(0,0,0,0.4)',
@@ -78,10 +79,7 @@ export default makeStyles((theme) => ({
     overflow: 'hidden',
     display: 'none',
     [theme.breakpoints.down('1300')]: {
-      width: 220,
-    },
-    [theme.breakpoints.down('1100')]: {
-      width: 190,
+      width: 250,
     },
   },
   title: {
@@ -89,6 +87,7 @@ export default makeStyles((theme) => ({
     marginBottom: theme.spacing(1),
   },
   description: {
+    color: '#fff',
     fontSize: 13,
     display: '-webkit-box',
     '-webkit-line-clamp': 3,
@@ -96,21 +95,37 @@ export default makeStyles((theme) => ({
     overflow: 'hidden',
   },
   image: {
-    height: 120,
+    height: 150,
     width: '100%',
     objectFit: 'cover',
   },
   playButton: {
-    [theme.breakpoints.down('md')]: {
-      height: 30,
-      width: 30,
-      padding: 10,
+    background: '#fff',
+    width: 40,
+    height: 40,
+    padding: theme.spacing(1),
+    transition: 'all .5s',
+    '&:hover': {
+      background: theme.palette.primary.main,
+      '& $playIcon': {
+        color: '#fff',
+      },
     },
+    [theme.breakpoints.down('md')]: {
+      height: 35,
+      width: 35,
+    },
+  },
+  actions: {
+    padding: theme.spacing(0.5, 0, 1),
   },
   playIcon: {
     [theme.breakpoints.down('md')]: {
       height: 20,
       width: 20,
     },
+  },
+  actionIcon: {
+    marginRight: theme.spacing(1),
   },
 }));
