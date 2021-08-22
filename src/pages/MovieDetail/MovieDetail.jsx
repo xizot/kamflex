@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import useStyles from './MovieDetail.styles';
 import Plyr from 'plyr';
-import 'plyr/dist/plyr.css';
 import CommentItem from '../../components/CommentItem/CommentItem';
 
 let player = null;
