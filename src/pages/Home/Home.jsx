@@ -1,7 +1,10 @@
-import { Container, Grid } from '@material-ui/core';
+import { Box, Container, Grid } from '@material-ui/core';
 import React from 'react';
 import MovieItem from '../../components/MovieItem/MovieItem';
-
+import useStyles from './Home.styles';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Mainvisual from '../../components/Mainvisual/Mainvisual';
 const listMovie = [
   {
     id: 1,
@@ -132,23 +135,28 @@ const listMovie = [
 ];
 
 function Home() {
+  const classes = useStyles();
+
   return (
-    <div style={{ minHeight: '100vh', padding: '20vh 0', background: '#131722' }}>
-      <Container>
-        <Grid container spacing={2}>
-          {listMovie.map((movie, index) => (
-            <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
-              <MovieItem
-                id={movie.id}
-                title={movie.title}
-                image={movie.image}
-                description={movie.description}
-                genres={movie.genres}
-              />
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+    <div className={classes.root}>
+      <Mainvisual />
+      <Box marginTop={5}>
+        <Container>
+          <Grid container spacing={2}>
+            {listMovie.map((movie, index) => (
+              <Grid item xs={6} sm={4} md={3} lg={2} key={index}>
+                <MovieItem
+                  id={movie.id}
+                  title={movie.title}
+                  image={movie.image}
+                  description={movie.description}
+                  genres={movie.genres}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
     </div>
   );
 }
