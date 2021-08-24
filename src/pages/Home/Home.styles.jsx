@@ -10,4 +10,10 @@ export default makeStyles((theme) => ({
     height: '80vh',
   },
   sliderItem: {},
+  section: {
+    marginTop: theme.spacing(10),
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(5),
+    },
+  },
 }));
