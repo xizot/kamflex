@@ -5,6 +5,7 @@ import Register from './pages/Register/Register';
 import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
 import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
 import ResetPassword from './pages/ResetPassword/ResetPassword';
+import UserProfile from './pages/UserProfile/UserProfile';
 import Home from './pages/Home/Home';
 import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import Footer from './components/Layouts/Footer/Footer';
@@ -59,6 +60,9 @@ function App() {
         </Route>
         <Route path="/forgot-password" exact>
           <ForgotPassword />
+        </Route>
+        <Route path="/user-profile" exact>
+          <UserProfile />
         </Route>
         <Route path="/reset-password" exact>
           <ResetPassword />
