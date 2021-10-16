@@ -5,17 +5,25 @@ import {
   FilledInput,
   InputLabel,
   FormHelperText,
+  Box,
+  IconButton,
 } from '@material-ui/core';
-
+import { toast } from 'react-toastify';
 import useStyles from './VerifyEmail.styles';
 import { useInput } from '../../hooks/user-input';
 import { verifyCodeSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
+import { Sync } from '@material-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { confirmEmail, sendConfirmEmail } from '../../slices/auth.slice';
+import { useHistory } from 'react-router';
 
 function VerifyEmail() {
   const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(false);
-
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
+  const history = useHistory();
   const {
     enteredInput: verifyCode,
     inputBlurHandler: verifyCodeBlurHandler,
@@ -26,20 +34,36 @@ function VerifyEmail() {
     errorMsg: verifyCodeErrorMessage,
   } = useInput(verifyCodeSchema);
 
+  const resendConfirmEmailHandler = async () => {
+    try {
+      const reponse = await dispatch(sendConfirmEmail()).unwrap();
+      toast.success(reponse.message);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
   const formIsValid = verifyCodeIsvalid;
 
-  const formSubmitHandler = (e) => {
+  const formSubmitHandler = async (e) => {
     e.preventDefault();
     if (!formIsValid) {
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
-      alert('verify-email');
+    try {
+      await dispatch(
+        confirmEmail({
+          id: user._id,
+          activationCode: verifyCode,
+        })
+      ).unwrap();
+      toast.success('Verify successfully. Redirect to home page after 5s...');
+      setTimeout(() => {
+        history.push('/');
+      }, 5000);
       verifyCodeReset();
-    }, 2000);
+    } catch (error) {
+      toast.error(error);
+    }
   };
   return (
     <div className={classes.root}>
@@ -71,10 +95,21 @@ function VerifyEmail() {
               </FormHelperText>
             )}
           </div>
+          <Box display="flex" flexWrap="wrap" justifyContent="space-between">
+            <Box flex={1} marginRight={1}>
+              <ButtonLoading
+                size="large"
+                isLoading={isLoading}
+                type="submit"
+                disabled={!formIsValid}>
+                Active
+              </ButtonLoading>
+            </Box>
 
-          <ButtonLoading size="large" isLoading={isLoading} type="submit" disabled={!formIsValid}>
-            Active
-          </ButtonLoading>
+            <IconButton color="primary" onClick={resendConfirmEmailHandler}>
+              <Sync />
+            </IconButton>
+          </Box>
         </form>
       </div>
     </div>

@@ -1,27 +1,32 @@
 import { Typography } from '@material-ui/core';
+import { Visibility } from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import useStyles from './MovieSlideItem.styles';
 
-function MovieSlideItem({ id, title, image, genres, resolution, releaseDate, score, classes }) {
+function MovieSlideItem({ id, title, image, genres, resolution, releaseDate, views, classes }) {
   const styles = useStyles();
   return (
     <div className={`${styles?.root} ${classes ? classes.root : ''}`}>
       <div className={styles.top}>
-        <div className={styles.score}>
+        <div className={styles.views}>
+          <Visibility className={styles.viewsIcon} />
           <Typography variant="body1" component="p">
-            {score}
+            {views}
           </Typography>
         </div>
-        <Link to={`/movie/${id}`}>
+        <Link to={`/detail/${id}`}>
           <img src={image} alt={title} className={styles.image} />
         </Link>
         <div className={styles.hoverSection}>
           <div className={styles.genres}>
             {genres &&
               genres.map((genre, index) => (
-                <Link to="" key={index} className={styles.genre}>
-                  {genre}
+                <Link
+                  to={`/movie?genre=${genre.toLowerCase()}`}
+                  key={index}
+                  className={styles.genre}>
+                  {genre} {index !== genres.length - 1 ? ', ' : ''}
                 </Link>
               ))}
           </div>

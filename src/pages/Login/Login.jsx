@@ -12,25 +12,31 @@ import {
 
 import useStyles from './Login.styles';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import { useInput } from '../../hooks/user-input';
-import { passwordschema, usernameSchema } from '../../schemas';
+import { passwordschema, emailSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
+import { useDispatch, useSelector } from 'react-redux';
+import { login } from '../../slices/auth.slice';
 
 function Login() {
   const classes = useStyles();
+  const location = useLocation();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
+  const [error, setError] = useState(null);
   const {
-    enteredInput: username,
-    inputBlurHandler: usernameBlurHandler,
-    inputChangeHandler: usernameChangeHandler,
-    inputReset: usernameReset,
-    inputIsValid: usernameIsvalid,
-    hasError: usernameHasError,
-    errorMsg: usernameErrorMessage,
-  } = useInput(usernameSchema);
+    enteredInput: email,
+    inputBlurHandler: emailBlurHandler,
+    inputChangeHandler: emailChangeHandler,
+    inputReset: emailReset,
+    inputIsValid: emailIsvalid,
+    hasError: emailHasError,
+    errorMsg: emailErrorMessage,
+  } = useInput(emailSchema);
 
   const {
     enteredInput: password,
@@ -42,7 +48,7 @@ function Login() {
     errorMsg: passwordErrorMessage,
   } = useInput(passwordschema);
 
-  const formIsValid = usernameIsvalid && passwordIsvalid;
+  const formIsValid = emailIsvalid && passwordIsvalid;
 
   const toggleShowPasswordHandler = () => {
     setShowPassword((prevState) => !prevState);
@@ -51,20 +57,39 @@ function Login() {
     event.preventDefault();
   };
 
-  const formSubmitHandler = (e) => {
+  const formSubmitHandler = async (e) => {
     e.preventDefault();
     if (!formIsValid) {
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
-      alert('login');
-      usernameReset();
+    setError(null);
+    try {
+      await dispatch(
+        login({
+          email,
+          password,
+        })
+      ).unwrap();
+      emailReset();
       passwordReset();
-    }, 2000);
+      //vghuy17ck1@gmail.com
+      //Abcxyz123
+    } catch (error) {
+      setError(error);
+    }
   };
+
+  if (isAuthenticated) {
+    if (user.banned) {
+      return <div>Banned</div>;
+    }
+    if (user.verified) {
+      return <Redirect to={location.state?.from || '/'} />;
+    }
+    if (!user.verified) {
+      return <Redirect to="/activation" />;
+    }
+  }
   return (
     <div className={classes.root}>
       <div>
@@ -74,25 +99,23 @@ function Login() {
           </Typography>
           <div className={classes.formControl}>
             <FormControl
-              error={usernameHasError}
+              error={emailHasError}
               variant="filled"
               fullWidth
               className={classes.textField}>
-              <InputLabel htmlFor="username" className={classes.inputLabel}>
-                Username
+              <InputLabel htmlFor="email" className={classes.inputLabel}>
+                email
               </InputLabel>
               <FilledInput
-                value={username}
-                onBlur={usernameBlurHandler}
-                onChange={usernameChangeHandler}
-                id="username"
+                value={email}
+                onBlur={emailBlurHandler}
+                onChange={emailChangeHandler}
+                id="email"
                 type="text"
               />
             </FormControl>
-            {usernameHasError && (
-              <FormHelperText className={classes.errorMessage}>
-                {usernameErrorMessage}
-              </FormHelperText>
+            {emailHasError && (
+              <FormHelperText className={classes.errorMessage}>{emailErrorMessage}</FormHelperText>
             )}
           </div>
 
@@ -132,11 +155,9 @@ function Login() {
               </FormHelperText>
             )}
           </div>
-          <ButtonLoading
-            size="large"
-            isLoading={isLoading}
-            type="submit"
-            disabled={!formIsValid}>
+
+          {error && <FormHelperText className={classes.resError}>{error}</FormHelperText>}
+          <ButtonLoading size="large" isLoading={isLoading} type="submit" disabled={!formIsValid}>
             Login
           </ButtonLoading>
 

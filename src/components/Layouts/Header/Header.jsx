@@ -7,16 +7,16 @@ import useStyles from './Header.styles';
 
 const navLink = [
   {
-    link: '/browse',
-    title: 'Browses',
-  },
-  {
     link: '/movie',
     title: 'Movies',
   },
   {
-    link: '/tv',
-    title: 'TV Shows',
+    link: '/watched',
+    title: 'Watched',
+  },
+  {
+    link: '/watch-later',
+    title: 'Watch Later',
   },
 ];
 
@@ -42,12 +42,8 @@ function Header() {
                 <Menu />
               </IconButton>
               <Box
-                className={`${classes.spSectionContent} ${
-                  openSPMenu ? classes.openSPMenu : ''
-                }`}>
-                <IconButton
-                  className={classes.iconClose}
-                  onClick={closeSPMenuHandler}>
+                className={`${classes.spSectionContent} ${openSPMenu ? classes.openSPMenu : ''}`}>
+                <IconButton className={classes.iconClose} onClick={closeSPMenuHandler}>
                   <Close />
                 </IconButton>
                 <Box className={classes.spNavigation}>

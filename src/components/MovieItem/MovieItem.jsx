@@ -23,14 +23,14 @@ function MovieItem({ id, title, image, description, genres, resolutions, height 
       <Box display="flex" alignItems="center" flexWrap="wrap" className={classes.frontGenres}>
         {genres &&
           genres.map((genre, index) => (
-            <Link to="/" key={index} className={classes.genre}>
+            <Link to={`/movie?genre=${genre.toLowerCase()}`} key={index} className={classes.genre}>
               {genre}
               {index < genres.length - 1 && ', '}
             </Link>
           ))}
       </Box>
       {/* hover */}
-      <Link to={`/movie/${id}`} className={classes.front}>
+      <Link to={`/detail/${id}`} className={classes.front}>
         <img src={image} alt="" className={classes.frontImage} />
         {/* <Typography variant="caption">{resolutions}</Typography> */}
         <Typography variant="caption" className={classes.frontTitle}>

@@ -11,10 +11,16 @@ import useStyles from './ForgotPassword.styles';
 import { useInput } from '../../hooks/user-input';
 import { emailSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
+import { toast } from 'react-toastify';
+import { forgotPassword } from '../../slices/auth.slice';
 
 function ForgotPassword() {
   const classes = useStyles();
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const history = useHistory();
+  const dispatch = useDispatch();
 
   const {
     enteredInput: email,
@@ -28,18 +34,22 @@ function ForgotPassword() {
 
   const formIsValid = emailIsvalid;
 
-  const formSubmitHandler = (e) => {
+  const formSubmitHandler = async (e) => {
     e.preventDefault();
     if (!formIsValid) {
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
-      alert('forgot-password');
+    try {
+      await dispatch(
+        forgotPassword({
+          email,
+        })
+      ).unwrap();
       emailReset();
-    }, 2000);
+      history.push('/recovery-password');
+    } catch (error) {
+      toast.error(error);
+    }
   };
   return (
     <div className={classes.root}>

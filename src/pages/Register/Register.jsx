@@ -9,24 +9,49 @@ import {
   Box,
   FormHelperText,
 } from '@material-ui/core';
-
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 import useStyles from './RegisterStyle';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, Redirect, useLocation } from 'react-router-dom';
 import { useInput } from '../../hooks/user-input';
-import {
-  passwordschema,
-  usernameSchema,
-  emailSchema,
-  displaynameSchema,
-  confirmpasswordSchema,
-} from '../../schemas';
+import { passwordschema, usernameSchema, emailSchema, confirmpasswordSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
-
+import MomentUtils from '@date-io/moment';
+import { useDispatch } from 'react-redux';
+import { register } from '../../slices/auth.slice';
+import { useSelector } from 'react-redux';
+import moment from 'moment';
 function Register() {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [showRetypePassword, setShowRetypePassword] = useState(false);
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const [birthDate, setBirthDate] = React.useState(new Date());
+  const [birthError, setBirthError] = useState(null);
+  const [error, setError] = useState(null);
+  const history = useHistory();
+  const location = useLocation();
+
+  // const today = new Date(new Date().toISOString().slice(0, 10));
+  // const minDate = today.setFullYear(today.getFullYear() + 5);
+  // const maxDate = today.setFullYear(today.getFullYear() + 150);
+
+  const dispatch = useDispatch();
+  const handleDateChange = (date) => {
+    // setBirthError(null);
+    // const selectedDate = new Date(date);
+
+    // if (selectedDate.getTime() > maxDate) {
+    //   setBirthError('ValidationError: Birth should not be after maximal date');
+    //   return;
+    // }
+    // if (selectedDate.getTime() < minDate) {
+    //   setBirthError('ValidationError: Birth should not be before minimal date');
+    //   return;
+    // }
+    setBirthDate(date);
+  };
 
   const {
     enteredInput: username,
@@ -47,16 +72,6 @@ function Register() {
     hasError: emailHasError,
     errorMsg: emailErrorMessage,
   } = useInput(emailSchema);
-
-  const {
-    enteredInput: displayname,
-    inputBlurHandler: displaynameBlurHandler,
-    inputChangeHandler: displaynameChangeHandler,
-    inputReset: displaynameReset,
-    hasError: displaynameHasError,
-    errorMsg: displaynameErrorMessage,
-  } = useInput(displaynameSchema);
-
   const {
     enteredInput: password,
     inputBlurHandler: passwordBlurHandler,
@@ -75,9 +90,34 @@ function Register() {
     inputIsValid: confirmpasswordIsvalid,
     hasError: confirmpasswordHasError,
     errorMsg: confirmpasswordErrorMessage,
+    isTouched,
   } = useInput(confirmpasswordSchema);
 
-  const formIsValid = usernameIsvalid && emailIsvalid && passwordIsvalid && confirmpasswordIsvalid;
+  const [isNotMatch, setIsNotMatch] = useState(true);
+
+  const passwordOnChangeHandler = (e) => {
+    passwordChangeHandler(e);
+    if (e.target.value !== confirmpassword && isTouched) {
+      setIsNotMatch(true);
+    } else {
+      setIsNotMatch(false);
+    }
+  };
+  const confirmPasswordOnChangeHandler = (e) => {
+    confirmpasswordChangeHandler(e);
+    if (e.target.value !== password) {
+      setIsNotMatch(true);
+    } else {
+      setIsNotMatch(false);
+    }
+  };
+
+  const formIsValid =
+    usernameIsvalid &&
+    emailIsvalid &&
+    passwordIsvalid &&
+    confirmpasswordIsvalid &&
+    birthError === null;
 
   const toggleShowPasswordHandler = () => {
     setShowPassword((prevState) => !prevState);
@@ -85,24 +125,40 @@ function Register() {
   const mouseDownPasswordHandler = (event) => {
     event.preventDefault();
   };
+  const toggleShowRetypePasswordHandler = () => {
+    setShowRetypePassword((prevState) => !prevState);
+  };
+  const mouseDownRetypePasswordHandler = (event) => {
+    event.preventDefault();
+  };
 
-  const formSubmitHandler = (e) => {
+  const formSubmitHandler = async (e) => {
     e.preventDefault();
     if (!formIsValid) {
       return;
     }
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-
-      alert('register');
+    setError(null);
+    try {
+      await dispatch(
+        register({
+          email,
+          username,
+          password,
+          birthdate: moment(birthDate).format('yyyy-MM-DD'),
+        })
+      ).unwrap();
+      history.push('/activation');
       usernameReset();
       emailReset();
-      displaynameReset();
       passwordReset();
       confirmpasswordReset();
-    }, 2000);
+    } catch (error) {
+      setError(error);
+    }
   };
+  if (isAuthenticated) {
+    return <Redirect to={location.state?.from || '/'} />;
+  }
   return (
     <div className={classes.root}>
       <div>
@@ -157,29 +213,36 @@ function Register() {
           </div>
 
           <div className={classes.formControl}>
-            <FormControl
-              error={displaynameHasError}
-              variant="filled"
-              fullWidth
-              className={classes.textField}>
-              <InputLabel htmlFor="displayname" className={classes.inputLabel}>
-                displayname
-              </InputLabel>
-              <FilledInput
-                value={displayname}
-                onBlur={displaynameBlurHandler}
-                onChange={displaynameChangeHandler}
-                id="displayname"
-                type="text"
-              />
-            </FormControl>
-            {displaynameHasError && (
-              <FormHelperText className={classes.errorMessage}>
-                {displaynameErrorMessage}
-              </FormHelperText>
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <FormControl
+                error={passwordHasError}
+                variant="filled"
+                fullWidth
+                className={classes.textField}>
+                <KeyboardDatePicker
+                  className={classes.datePicker}
+                  label="Birth day"
+                  format="MM/DD/yyyy"
+                  // minDate={minDate}
+                  // maxDate={maxDate}
+                  value={birthDate}
+                  onChange={handleDateChange}
+                  error={false}
+                  helperText={null}
+                  autoOk
+                  variant="inline"
+                  inputVariant="filled"
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </FormControl>
+            </MuiPickersUtilsProvider>
+
+            {birthError && (
+              <FormHelperText className={classes.errorMessage}>{birthError}</FormHelperText>
             )}
           </div>
-
           <div className={classes.formControl}>
             <FormControl
               error={passwordHasError}
@@ -192,7 +255,7 @@ function Register() {
               <FilledInput
                 value={password}
                 onBlur={passwordBlurHandler}
-                onChange={passwordChangeHandler}
+                onChange={passwordOnChangeHandler}
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 className={classes.inputField}
@@ -229,18 +292,18 @@ function Register() {
               <FilledInput
                 value={confirmpassword}
                 onBlur={confirmpasswordBlurHandler}
-                onChange={confirmpasswordChangeHandler}
+                onChange={confirmPasswordOnChangeHandler}
                 id="password"
-                type={showPassword ? 'text' : 'password'}
+                type={showRetypePassword ? 'text' : 'password'}
                 className={classes.inputField}
                 endAdornment={
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
                       edge="end"
-                      onClick={toggleShowPasswordHandler}
-                      onMouseDown={mouseDownPasswordHandler}>
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                      onClick={toggleShowRetypePasswordHandler}
+                      onMouseDown={mouseDownRetypePasswordHandler}>
+                      {showRetypePassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 }
@@ -252,8 +315,13 @@ function Register() {
                 {confirmpasswordErrorMessage}
               </FormHelperText>
             )}
+            {isNotMatch && isTouched && (
+              <FormHelperText className={classes.errorMessage}>
+                <>ValidationError: Retype password does not match password</>
+              </FormHelperText>
+            )}
           </div>
-
+          {error && <FormHelperText className={classes.resError}>{error}</FormHelperText>}
           <ButtonLoading size="large" isLoading={isLoading} type="submit" disabled={!formIsValid}>
             Register
           </ButtonLoading>

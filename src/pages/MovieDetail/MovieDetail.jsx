@@ -1,84 +1,126 @@
 import { Box, Button, Container, FormControl, TextField, Typography } from '@material-ui/core';
-import { AccessTime } from '@material-ui/icons';
-import React, { useEffect, useLayoutEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { AccessTime, PlayArrow, ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons';
+import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
+import { useParams, useHistory, Link } from 'react-router-dom';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import useStyles from './MovieDetail.styles';
 import Plyr from 'plyr';
 import CommentItem from '../../components/CommentItem/CommentItem';
+import { useDispatch } from 'react-redux';
+import { detailGetById } from '../../slices/detail.slice';
+import { timeToClient } from '../../utils/converter';
 
 let player = null;
 function MovieDetail() {
   const classes = useStyles();
+  const history = useHistory();
   const params = useParams();
-  console.log(params);
+  const dispatch = useDispatch();
+  const id = params.id;
+  const [error, setError] = useState(null);
+  const [detail, setDetail] = useState({});
+
+  const getDetailHandler = useCallback(
+    async (id) => {
+      try {
+        const response = await dispatch(detailGetById(id)).unwrap();
+        setDetail(response);
+      } catch (error) {
+        setError(error);
+      }
+    },
+    [dispatch]
+  );
+
+  const playHandler = () => {
+    history.push(`/watch/${id}`, `/detail/{id}`);
+  };
+
+  useEffect(() => {
+    getDetailHandler(id);
+  }, [id, getDetailHandler]);
+
+  useEffect(() => {
+    const trailers = detail.videos;
+    if (trailers?.length) {
+      console.log(trailers[0]);
+      console.log(trailers[0].size?.toLowerCase());
+      if (player) player.destroy();
+      const playerDOM = document.getElementById('player');
+
+      player = new Plyr(playerDOM);
+      const videoSettings = {
+        type: 'video',
+        sources: [
+          {
+            src: trailers[0].key,
+            provider: trailers[0].site?.toLowerCase(),
+          },
+        ],
+      };
+      player.source = videoSettings;
+    }
+  }, [detail]);
+
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-
-  useEffect(() => {
-    if (player) player.destroy();
-    const playerDOM = document.getElementById('player');
-    player = new Plyr(playerDOM);
-    const videoSettings = {
-      type: 'video',
-      sources: [
-        {
-          src: 'bTqVqk7FSmY',
-          provider: 'youtube',
-        },
-      ],
-    };
-    player.source = videoSettings;
-  }, []);
-
   return (
     <div className={classes.root}>
       <Container>
         <Box display="flex" flexWrap="wrap">
-          <img
-            className={classes.poster}
-            src="https://images.weserv.nl/?url=https://image.tmdb.org/t/p/w342/jyqi5BkDoKKIA2WAoz3HBtRHld3.jpg"
-            alt=""
-          />
+          <img className={classes.poster} src={detail.posterUrl} alt="" />
           <Box className={classes.detail}>
             <Typography variant="h3" className={classes.title}>
-              Fate/stay night [Unlimited Blade Works]
+              {detail.title}
             </Typography>
             <Box className={classes.review} display="flex" flexWrap="wrap" alignItems="center">
-              <Typography variant="body1" className={classes.score}>
-                4.9
-              </Typography>
               <Box className={classes.release} display="flex" flexWrap="wrap" alignItems="center">
                 <AccessTime fontSize="small" className={classes.iconTime} />
                 <Typography variant="body1" className={classes.time}>
-                  21/08/2021
+                  {detail.releaseDate && timeToClient(detail.releaseDate)}
                 </Typography>
               </Box>
             </Box>
             <Typography variant="body2" className={classes.moreInfo}>
-              Number of season: 0
+              Total views: {detail.views}
             </Typography>
             <Typography variant="body2" className={classes.moreInfo}>
-              Number of episode: 24
+              Genres:{' '}
+              {detail.genres?.map((item, index) => (
+                <Link to={`/movie?genre=${item.name.toLowerCase()}`} className={classes.genre}>
+                  {index === 0 ? ' ' : ', '}
+                  {item.name}
+                </Link>
+              ))}
             </Typography>
             <Typography variant="body2" className={classes.moreInfo}>
-              Duration: 24 minutes / episode
+              Producers: {detail.producers?.map((item) => item.name).join(', ')}
             </Typography>
+            <Box className={classes.actions}>
+              <Button className={classes.rating} startIcon={<ThumbUpAlt />}>
+                (0)
+              </Button>
+              <Button className={classes.rating} startIcon={<ThumbDownAlt />}>
+                (0)
+              </Button>
+            </Box>
+            <Box className={classes.actions}>
+              <Button
+                variant="contained"
+                color="primary"
+                className={classes.btnPlay}
+                startIcon={<PlayArrow />}
+                onClick={playHandler}>
+                Play
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Box className={classes.content}>
           <Box className={`${classes.section} ${classes.description}`} data-aos="fade-up">
             <Typography variant="body1" className={classes.descriptionContent}>
-              The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters,
-              through the use of the command seals they are given when they enter the war, command
-              Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail
-              War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer,
-              she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of
-              granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally
-              enters the competition and ends up commanding a Servant of his own known as Saber. As
-              they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary
-              alliance as they challenge their opponents in the Holy Grail War.
+              {detail.overview}
             </Typography>
           </Box>
           <Box className={classes.section} data-aos="fade-up">

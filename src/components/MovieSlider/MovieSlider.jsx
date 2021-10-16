@@ -89,7 +89,7 @@ function MovieSlider({ title, subtitle, listMovie, slidesToShow, settings }) {
               image={movie.image}
               genres={movie.genres}
               resolution={movie.resolution}
-              score={movie.score}
+              views={movie.views}
             />
           ))}
       </Slider>

@@ -73,4 +73,15 @@ export default makeStyles((theme) => ({
     color: 'red',
     fontWeight: 'normal',
   },
+  datePicker: {
+    '& .MuiInputBase-adornedEnd': {
+      marginRight: -12,
+    },
+  },
+  resError: {
+    fontSize: 11,
+    color: 'red',
+    fontWeight: 'normal',
+    marginBottom: theme.spacing(1),
+  },
 }));

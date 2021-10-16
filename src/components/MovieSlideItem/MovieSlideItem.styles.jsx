@@ -13,15 +13,15 @@ export default makeStyles((theme) => ({
     marginBottom: theme.spacing(2),
     paddingTop: 'calc(4/3 * 100%)',
   },
-  score: {
+  views: {
     position: 'absolute',
-    top: -15,
-    left: '50%',
-    transform: 'translateX(-50%)',
+    top: theme.spacing(1),
+    left: theme.spacing(1),
     background: theme.palette.primary.main,
-    width: 40,
-    height: 30,
-    borderRadius: 20,
+    minWidth: 40,
+    width: 'fit-content',
+    padding: theme.spacing(0.5, 0.75),
+    borderRadius: 5,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -31,9 +31,13 @@ export default makeStyles((theme) => ({
     zIndex: 10,
     '& > p': {
       lineHeight: 0,
+      fontSize: 11,
     },
   },
-
+  viewsIcon: {
+    fontSize: 12,
+    marginRight: theme.spacing(0.25),
+  },
   image: {
     position: 'absolute',
     top: 0,
@@ -57,9 +61,9 @@ export default makeStyles((theme) => ({
   genres: {
     pointerEvents: 'all',
     position: 'absolute',
-    top: theme.spacing(4),
-    left: theme.spacing(2),
-    right: theme.spacing(2),
+    top: theme.spacing(5),
+    left: theme.spacing(1),
+    right: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
     flexWrap: 'wrap',

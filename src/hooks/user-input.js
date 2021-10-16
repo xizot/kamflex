@@ -41,5 +41,6 @@ export const useInput = (schemaJson = null, initialState = '') => {
     inputReset,
     setEnteredInput,
     errorMsg,
+    isTouched,
   };
 };

@@ -3,7 +3,7 @@ import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    border: (props) => (props?.color ? `3px solid ${props?.color}` : `3px solid #fff`),
+    border: (props) => (props?.color ? `1px solid ${props?.color}` : `1px solid #fff`),
     position: 'relative',
     width: 40,
     height: 40,

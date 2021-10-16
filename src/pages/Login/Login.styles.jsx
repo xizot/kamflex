@@ -73,4 +73,10 @@ export default makeStyles((theme) => ({
     color: 'red',
     fontWeight: 'normal',
   },
+  resError: {
+    fontSize: 11,
+    color: 'red',
+    fontWeight: 'normal',
+    marginBottom: theme.spacing(1),
+  },
 }));

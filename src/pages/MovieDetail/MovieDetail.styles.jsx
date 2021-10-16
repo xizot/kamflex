@@ -114,4 +114,23 @@ export default makeStyles((theme) => ({
     marginLeft: 'auto',
     minWidth: 100,
   },
+  btnPlay: {
+    minWidth: 150,
+  },
+  genre: {
+    color: theme.palette.primary.main,
+  },
+  actions: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    alignItems: 'center',
+  },
+  rating: {
+    color: '#fff',
+    transition: 'all .5s',
+    '&:hover': {
+      opacity: 0.8,
+      color: theme.palette.primary.main,
+    },
+  },
 }));

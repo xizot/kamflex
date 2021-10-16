@@ -1,19 +1,15 @@
 import { Route, Switch } from 'react-router-dom';
 import Header from './components/Layouts/Header/Header';
-import Login from './pages/Login/Login';
-import Register from './pages/Register/Register';
-import VerifyEmail from './pages/VerifyEmail/VerifyEmail';
-import ForgotPassword from './pages/ForgotPassword/ForgotPassword';
-import ResetPassword from './pages/ResetPassword/ResetPassword';
-import Home from './pages/Home/Home';
 import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import Footer from './components/Layouts/Footer/Footer';
-import TvShow from './pages/TvShow/TvShow';
-import Movie from './pages/Movie/Movie';
-import MovieDetail from './pages/MovieDetail/MovieDetail';
 import aos from 'aos';
 import 'aos/dist/aos.css';
-import { useEffect } from 'react';
+import { Suspense, useEffect } from 'react';
+import Loading from './components/Loading/Loading';
+import { routes } from './config/routes';
+import ProtectedRoute from './components/Commons/ProtectedRoute/ProtectedRoute';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 const theme = createTheme({
   palette: {
     primary: {
@@ -36,38 +32,33 @@ function App() {
   }, []);
   return (
     <ThemeProvider theme={theme}>
+      <ToastContainer />
       <CssBaseline />
       <Header />
-      <Switch>
-        <Route path="/" exact>
-          <Home />
-        </Route>
-        <Route path="/movie" exact>
-          <Movie />
-        </Route>
-        <Route path="/tv" exact>
-          <TvShow />
-        </Route>
-        <Route path="/login" exact>
-          <Login />
-        </Route>
-        <Route path="/register" exact>
-          <Register />
-        </Route>
-        <Route path="/verify-email" exact>
-          <VerifyEmail />
-        </Route>
-        <Route path="/forgot-password" exact>
-          <ForgotPassword />
-        </Route>
-        <Route path="/reset-password" exact>
-          <ResetPassword />
-        </Route>
-        <Route path="/movie/:id" exact>
-          <MovieDetail />
-        </Route>
-        <Route path="*">404 NOT FOUND</Route>
-      </Switch>
+      <Suspense fallback={<Loading />}>
+        <Switch>
+          {routes.map((route, index) => {
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                exact={route.exact}
+                render={(props) => {
+                  if (route.protected) {
+                    return (
+                      <ProtectedRoute {...props}>
+                        <route.component />
+                      </ProtectedRoute>
+                    );
+                  }
+                  return <route.component {...route.props} />;
+                }}
+              />
+            );
+          })}
+          <Route path="*">404 NOT FOUND</Route>
+        </Switch>
+      </Suspense>
       <Footer />
     </ThemeProvider>
   );
