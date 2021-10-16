@@ -94,6 +94,21 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
+export const resetPassword = createAsyncThunk(
+  'auth/resetPassword',
+  async ({ id, recoveryCode, password }, { rejectWithValue }) => {
+    try {
+      return (await axiosInstance.post('/api/auth/-reset-password', { id, recoveryCode, password }))
+        .data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   isAuthenticated: false,
@@ -121,6 +136,17 @@ const authSuccess = (state, action) => {
 const authSlice = createSlice({
   name: 'authSlice',
   initialState,
+  reducers: {
+    verifiedAuth: authSuccess,
+    logout: (state) => {
+      state.isAuthenticated = false;
+      state.isLoading = false;
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.user = {};
+      localStorage.removeItem('refreshToken');
+    },
+  },
   extraReducers: {
     [login.pending]: (state) => {
       state.isLoading = true;
@@ -152,6 +178,13 @@ const authSlice = createSlice({
     [forgotPassword.fulfilled]: (state) => {
       state.isLoading = false;
     },
+    [resetPassword.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [resetPassword.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [resetPassword.fulfilled]: authSuccess,
   },
 });
 

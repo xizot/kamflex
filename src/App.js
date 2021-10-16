@@ -10,6 +10,8 @@ import { routes } from './config/routes';
 import ProtectedRoute from './components/Commons/ProtectedRoute/ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { authActions } from './slices/auth.slice';
 const theme = createTheme({
   palette: {
     primary: {
@@ -24,12 +26,24 @@ const theme = createTheme({
 });
 
 function App() {
+  const dispatch = useDispatch();
   useEffect(() => {
     aos.init({
       offset: 120,
     });
     aos.refresh();
-  }, []);
+
+    const accessToken = localStorage.getItem('accessToken');
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (accessToken && refreshToken) {
+      dispatch(
+        authActions.verifiedAuth({
+          accessToken,
+          refreshToken,
+        })
+      );
+    }
+  }, [dispatch]);
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer />

@@ -29,6 +29,8 @@ function Register() {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const [birthDate, setBirthDate] = React.useState(new Date());
   const [birthError, setBirthError] = useState(null);
+  const [isNotMatch, setIsNotMatch] = useState(true);
+
   const [error, setError] = useState(null);
   const history = useHistory();
   const location = useLocation();
@@ -92,8 +94,6 @@ function Register() {
     errorMsg: confirmpasswordErrorMessage,
     isTouched,
   } = useInput(confirmpasswordSchema);
-
-  const [isNotMatch, setIsNotMatch] = useState(true);
 
   const passwordOnChangeHandler = (e) => {
     passwordChangeHandler(e);
@@ -315,7 +315,7 @@ function Register() {
                 {confirmpasswordErrorMessage}
               </FormHelperText>
             )}
-            {isNotMatch && isTouched && (
+            {isNotMatch && isTouched && !confirmpasswordHasError && (
               <FormHelperText className={classes.errorMessage}>
                 <>ValidationError: Retype password does not match password</>
               </FormHelperText>

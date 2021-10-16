@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { Box, IconButton } from '@material-ui/core';
 import { AppBar, Button, Toolbar } from '@material-ui/core';
-import { Link, NavLink } from 'react-router-dom';
-import { Close, Menu } from '@material-ui/icons';
+import { Link, NavLink, useHistory } from 'react-router-dom';
+import { Close, Menu, ExitToApp } from '@material-ui/icons';
 import useStyles from './Header.styles';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../../../slices/auth.slice';
 
 const navLink = [
   {
@@ -23,6 +26,9 @@ const navLink = [
 function Header() {
   const classes = useStyles();
   const [openSPMenu, setOpenSPMenu] = useState(false);
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const dispatch = useDispatch();
+  const history = useHistory();
 
   const openSPMenuHandler = () => {
     setOpenSPMenu(true);
@@ -30,6 +36,12 @@ function Header() {
 
   const closeSPMenuHandler = () => {
     setOpenSPMenu(false);
+  };
+
+  const logoutHandler = () => {
+    dispatch(authActions.logout());
+
+    history.push('/login');
   };
 
   return (
@@ -80,11 +92,17 @@ function Header() {
           </Box>
         </Box>
         <Box>
-          <Link to="/login">
-            <Button color="primary" variant="contained">
-              Login
+          {!isAuthenticated ? (
+            <Link to="/login">
+              <Button color="primary" variant="contained">
+                Login
+              </Button>
+            </Link>
+          ) : (
+            <Button color="primary" variant="contained" onClick={logoutHandler}>
+              Logout <ExitToApp style={{ marginLeft: 5 }} />
             </Button>
-          </Link>
+          )}
         </Box>
       </Toolbar>
     </AppBar>
