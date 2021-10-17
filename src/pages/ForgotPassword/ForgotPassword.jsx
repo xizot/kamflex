@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Typography,
   FormControl,
@@ -46,7 +46,7 @@ function ForgotPassword() {
         })
       ).unwrap();
       emailReset();
-      history.push('/recovery-password');
+      toast.success('Please check your email to reset password');
     } catch (error) {
       toast.error(error);
     }

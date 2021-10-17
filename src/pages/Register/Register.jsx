@@ -41,7 +41,7 @@ function Register() {
 
   const dispatch = useDispatch();
   const handleDateChange = (date) => {
-    // setBirthError(null);
+    setBirthError(null);
     // const selectedDate = new Date(date);
 
     // if (selectedDate.getTime() > maxDate) {

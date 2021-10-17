@@ -8,6 +8,7 @@ export default makeStyles((theme) => ({
     background: theme.palette.secondary.main,
   },
   section: {
+    position: 'relative',
     '&:nth-child(n + 6)': {
       marginBottom: theme.spacing(7),
     },
@@ -36,6 +37,20 @@ export default makeStyles((theme) => ({
     '& .MuiPaginationItem-root.Mui-selected': {
       color: theme.palette.primary.main,
       borderColor: theme.palette.primary.main,
+    },
+  },
+
+  del: {
+    position: 'absolute',
+    right: theme.spacing(2),
+    top: theme.spacing(2),
+    zIndex: 100,
+    color: '#fff',
+    background: alpha('#000', 0.5),
+    transition: '.5s',
+    '&:hover': {
+      color: theme.palette.primary.main,
+      background: '#fff',
     },
   },
 }));

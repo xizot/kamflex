@@ -9,17 +9,13 @@ import {
   Box,
   FormHelperText,
 } from '@material-ui/core';
+import queryString from 'query-string';
 
 import useStyles from './ResetPassword.styles';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useInput } from '../../hooks/user-input';
-import {
-  passwordschema,
-  recoveryCodeSchema,
-  confirmpasswordSchema,
-  usernameSchema,
-} from '../../schemas';
+import { passwordschema, confirmpasswordSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import { useDispatch } from 'react-redux';
 import { resetPassword } from '../../slices/auth.slice';
@@ -28,22 +24,22 @@ import { useSelector } from 'react-redux';
 function ResetPassword() {
   const classes = useStyles();
   const isLoading = useSelector((state) => state.auth.isLoading);
-  const user = useSelector((state) => state.auth.user);
   const [showPassword, setShowPassword] = useState(false);
   const [showRetypePassword, setShowRetypePassword] = useState(false);
   const [isNotMatch, setIsNotMatch] = useState(true);
   const history = useHistory();
   const dispatch = useDispatch();
-
-  const {
-    enteredInput: recoveryCode,
-    inputBlurHandler: recoveryCodeBlurHandler,
-    inputChangeHandler: recoveryCodeChangeHandler,
-    inputReset: recoveryCodeReset,
-    inputIsValid: recoveryCodeIsvalid,
-    hasError: recoveryCodeHasError,
-    errorMsg: recoveryCodeErrorMessage,
-  } = useInput(recoveryCodeSchema);
+  const location = useLocation();
+  const { id, code } = queryString.parse(location.search);
+  // const {
+  //   enteredInput: recoveryCode,
+  //   inputBlurHandler: recoveryCodeBlurHandler,
+  //   inputChangeHandler: recoveryCodeChangeHandler,
+  //   inputReset: recoveryCodeReset,
+  //   inputIsValid: recoveryCodeIsvalid,
+  //   hasError: recoveryCodeHasError,
+  //   errorMsg: recoveryCodeErrorMessage,
+  // } = useInput(recoveryCodeSchema);
 
   const {
     enteredInput: password,
@@ -80,7 +76,7 @@ function ResetPassword() {
   const mouseDownRetypePasswordHandler = (event) => {
     event.preventDefault();
   };
-  const formIsValid = recoveryCodeIsvalid && passwordIsvalid && confirmpasswordIsvalid;
+  const formIsValid = passwordIsvalid && confirmpasswordIsvalid;
 
   const toggleShowPasswordHandler = () => {
     setShowPassword((prevState) => !prevState);
@@ -97,12 +93,11 @@ function ResetPassword() {
     try {
       await dispatch(
         resetPassword({
-          id: user._id,
-          recoveryCode,
+          id: id,
+          recoveryCode: code,
           password,
         })
       ).unwrap();
-      recoveryCodeReset();
       passwordReset();
       confirmpasswordReset();
 
@@ -119,7 +114,7 @@ function ResetPassword() {
           <Typography variant="h6" className={classes.title}>
             Reset Password
           </Typography>
-          <div className={classes.formControl}>
+          {/* <div className={classes.formControl}>
             <FormControl
               error={recoveryCodeHasError}
               variant="filled"
@@ -136,12 +131,18 @@ function ResetPassword() {
                 type="text"
               />
             </FormControl>
-            {recoveryCodeHasError && (
+
+            {(recoveryCodeHasError && (
               <FormHelperText className={classes.errorMessage}>
                 {recoveryCodeErrorMessage}
               </FormHelperText>
-            )}
-          </div>
+            )) ||
+              (recoveryCode.length === 0 && (
+                <FormHelperText style={{ color: '#fff', paddingLeft: 8 }}>
+                  The CODE in your email
+                </FormHelperText>
+              ))}
+          </div> */}
 
           <div className={classes.formControl}>
             <FormControl
@@ -215,7 +216,7 @@ function ResetPassword() {
                 {confirmpasswordErrorMessage}
               </FormHelperText>
             )}
-            {isNotMatch && !confirmpasswordHasError && (
+            {isNotMatch && isTouched && !confirmpasswordHasError && (
               <FormHelperText className={classes.errorMessage}>
                 <>ValidationError: Retype password does not match password</>
               </FormHelperText>

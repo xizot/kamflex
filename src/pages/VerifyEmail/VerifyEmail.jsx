@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import {
   Typography,
   FormControl,
@@ -59,14 +59,14 @@ function VerifyEmail() {
         ).unwrap();
         toast.success('Verify successfully. Redirect to home page after 5s...');
         setTimeout(() => {
-          history.push('/');
+          history.push(location.state?.from || '/');
         }, 5000);
         verifyCodeReset();
       } catch (error) {
         toast.error(error);
       }
     },
-    [dispatch, history, verifyCodeReset]
+    [dispatch, history, verifyCodeReset, location.state]
   );
   const formSubmitHandler = async (e) => {
     e.preventDefault();
@@ -107,11 +107,17 @@ function VerifyEmail() {
                 type="text"
               />
             </FormControl>
-            {verifyCodeHasError && (
+
+            {(verifyCodeHasError && (
               <FormHelperText className={classes.errorMessage}>
                 {verifyCodeErrorMessage}
               </FormHelperText>
-            )}
+            )) ||
+              (verifyCode.length === 0 && (
+                <FormHelperText style={{ color: '#fff', paddingLeft: 8 }}>
+                  The CODE in your email
+                </FormHelperText>
+              ))}
           </div>
           <Box display="flex" flexWrap="wrap" justifyContent="space-between">
             <Box flex={1} marginRight={1}>

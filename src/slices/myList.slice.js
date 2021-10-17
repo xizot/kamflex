@@ -15,6 +15,48 @@ export const getMyList = createAsyncThunk(
   }
 );
 
+export const insertMyList = createAsyncThunk(
+  'myList/post',
+  async ({ media }, { rejectWithValue }) => {
+    try {
+      return (await axiosInstance.post(`/api/playlists`, { media })).data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const checkExisting = createAsyncThunk(
+  'myList/getExisting',
+  async ({ media }, { rejectWithValue }) => {
+    try {
+      return (await axiosInstance.get(`/api/playlists/media/${media}`)).data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
+export const delMyListById = createAsyncThunk(
+  'myList/post',
+  async ({ media }, { rejectWithValue }) => {
+    try {
+      return (await axiosInstance.delete(`/api/playlists/media/${media}`)).data;
+    } catch (error) {
+      if (!error.response) {
+        throw error;
+      }
+      return rejectWithValue(error.response.data.message);
+    }
+  }
+);
+
 const myListSlice = createSlice({
   name: 'myListSlice',
   initialState: {
@@ -23,6 +65,11 @@ const myListSlice = createSlice({
     totalResults: 0,
     page: 0,
     results: [],
+  },
+  reducers: {
+    removeItem: (state, action) => {
+      state.results = state.results.filter((item) => item.media._id !== action.payload);
+    },
   },
   extraReducers: {
     [getMyList.pending]: (state) => {

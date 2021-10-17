@@ -1,6 +1,14 @@
 import { alpha, makeStyles } from '@material-ui/core';
 
 export default makeStyles((theme) => ({
+  onlyMobile: {
+    '& $hoverSection': {
+      display: 'none !important',
+    },
+    '& $frontTitle, & $frontGenres': {
+      display: '-webkit-box',
+    },
+  },
   root: {
     display: 'block',
     position: 'relative',
@@ -11,6 +19,9 @@ export default makeStyles((theme) => ({
       '&:hover': {
         '& $hoverSection': {
           display: 'block',
+        },
+        '& $frontTitle': {
+          textDecoration: 'underline',
         },
       },
     },
@@ -34,10 +45,16 @@ export default makeStyles((theme) => ({
     zIndex: 1,
     color: '#fff',
     background: alpha('#000', 0.3),
-    padding: theme.spacing(1),
+    lineHeight: 2.5,
+    paddingLeft: theme.spacing(1),
     display: 'none',
+    width: '100%',
+    '-webkit-line-clamp': 1,
+    '-webkit-box-orient': 'vertical',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     [theme.breakpoints.down('sm')]: {
-      display: 'block',
+      display: '-webkit-box',
     },
   },
   frontGenres: {
@@ -127,5 +144,9 @@ export default makeStyles((theme) => ({
   },
   actionIcon: {
     marginRight: theme.spacing(1),
+    color: theme.palette.primary.main + ' !important',
+  },
+  rated: {
+    color: theme.palette.primary.main,
   },
 }));

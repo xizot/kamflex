@@ -11,13 +11,14 @@ function Movie() {
   const classes = useStyles();
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(42);
+  // const [limit, setLimit] = useState(42);
+  const limit = 42;
   const dispatch = useDispatch();
 
-  const isLoading = useSelector((state) => state.media.isLoading);
   const totalPages = useSelector((state) => state.media.totalPages);
-  const totalResults = useSelector((state) => state.media.totalResults);
-  const currentPage = useSelector((state) => state.media.page);
+  // const isLoading = useSelector((state) => state.media.isLoading);
+  // const totalResults = useSelector((state) => state.media.totalResults);
+  // const currentPage = useSelector((state) => state.media.page);
   const results = useSelector((state) => state.media.results);
 
   const getMediaItemsHandler = useCallback(

@@ -15,14 +15,15 @@ function Search() {
   const location = useLocation();
 
   const totalPages = useSelector((state) => state.search.totalPages);
-  const totalResults = useSelector((state) => state.search.totalResults);
-  const currentPage = useSelector((state) => state.search.page);
+  // const totalResults = useSelector((state) => state.search.totalResults);
+  // const currentPage = useSelector((state) => state.search.page);
+  // const isLoading = useSelector((state) => state.search.isLoading);
   const results = useSelector((state) => state.search.results);
 
   const query = decodeURIComponent(location.search.slice(3));
-  const isLoading = useSelector((state) => state.search.isLoading);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(42);
+  // const [limit, setLimit] = useState(42);
+  const limit = 42;
   const [error, setError] = useState(null);
 
   const pageChangeHandler = (event, value) => {

@@ -15,14 +15,14 @@ function History() {
   const dispatch = useDispatch();
 
   const totalPages = useSelector((state) => state.history.totalPages);
-  const totalResults = useSelector((state) => state.history.totalResults);
-  const currentPage = useSelector((state) => state.history.page);
-  const results = useSelector((state) => state.history.results);
-  console.log('🚀 ~ file: History.jsx ~ line 19 ~ History ~ results', results);
+  // const totalResults = useSelector((state) => state.history.totalResults);
+  // const currentPage = useSelector((state) => state.history.page);
+  // const isLoading = useSelector((state) => state.search.isLoading);
 
-  const isLoading = useSelector((state) => state.search.isLoading);
+  const results = useSelector((state) => state.history.results);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(42);
+  // const [limit, setLimit] = useState(42);
+  const limit = 42;
   const [error, setError] = useState(null);
 
   const pageChangeHandler = (event, value) => {
@@ -78,7 +78,7 @@ function History() {
                 title={movie.media?.title}
                 image={movie.media?.posterUrl}
                 description={movie.media?.overview}
-                genres={movie.media?.genres.map((item) => item.name)}
+                // genres={movie.media?.genres.map((item) => item.name)}
               />
             </Grid>
           ))}
@@ -91,7 +91,7 @@ function History() {
               shape="rounded"
               page={page}
               onChange={pageChangeHandler}
-              count={50}
+              count={totalPages}
             />
           </div>
         )}

@@ -40,7 +40,7 @@ export const routes = [
     component: ForgotPassword,
   },
   {
-    path: '/recovery-password',
+    path: '/reset-password',
     protected: false,
     exact: true,
     component: ResetPassword,

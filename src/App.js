@@ -1,4 +1,4 @@
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Header from './components/Layouts/Header/Header';
 import { createTheme, CssBaseline, ThemeProvider } from '@material-ui/core';
 import Footer from './components/Layouts/Footer/Footer';
@@ -10,8 +10,9 @@ import { routes } from './config/routes';
 import ProtectedRoute from './components/Commons/ProtectedRoute/ProtectedRoute';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from './slices/auth.slice';
+import { HistoryOutlined } from '@material-ui/icons';
 const theme = createTheme({
   palette: {
     primary: {
@@ -27,6 +28,9 @@ const theme = createTheme({
 
 function App() {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const history = useHistory();
+  const location = useLocation();
   useEffect(() => {
     aos.init({
       offset: 120,
@@ -44,6 +48,13 @@ function App() {
       );
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    if (user.verified === false) {
+      console.log(user.verified);
+      return history.push('/confirm-email');
+    }
+  }, [user, history, location.pathname]);
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer />
@@ -60,7 +71,7 @@ function App() {
                 render={(props) => {
                   if (route.protected) {
                     return (
-                      <ProtectedRoute {...props}>
+                      <ProtectedRoute {...props} currentPath={route.path}>
                         <route.component />
                       </ProtectedRoute>
                     );

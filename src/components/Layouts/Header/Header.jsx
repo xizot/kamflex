@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, IconButton } from '@material-ui/core';
 import { AppBar, Button, Toolbar } from '@material-ui/core';
 import { Link, NavLink, useHistory } from 'react-router-dom';
-import { Close, Menu, ExitToApp, Search, Person } from '@material-ui/icons';
+import { Close, Menu, ExitToApp, Person } from '@material-ui/icons';
 import useStyles from './Header.styles';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -13,14 +13,17 @@ const navLink = [
   {
     link: '/movie',
     title: 'Movies',
+    protect: false,
   },
   {
     link: '/my-list',
     title: 'My List',
+    protect: true,
   },
   {
     link: '/history',
     title: 'History',
+    protect: true,
   },
 ];
 
@@ -60,16 +63,29 @@ function Header() {
                   <Close />
                 </IconButton>
                 <Box className={classes.spNavigation}>
-                  {navLink.map(({ link, title }, index) => (
-                    <NavLink
-                      key={index}
-                      to={link}
-                      className={classes.navLink}
-                      activeClassName={classes.navLinkActive}
-                      onClick={closeSPMenuHandler}>
-                      {title}
-                    </NavLink>
-                  ))}
+                  {navLink.map(({ link, title, protect }, index) => {
+                    return !protect ? (
+                      <NavLink
+                        key={index}
+                        to={link}
+                        className={classes.navLink}
+                        activeClassName={classes.navLinkActive}
+                        onClick={closeSPMenuHandler}>
+                        {title}
+                      </NavLink>
+                    ) : (
+                      isAuthenticated && (
+                        <NavLink
+                          key={index}
+                          to={link}
+                          className={classes.navLink}
+                          activeClassName={classes.navLinkActive}
+                          onClick={closeSPMenuHandler}>
+                          {title}
+                        </NavLink>
+                      )
+                    );
+                  })}
                 </Box>
               </Box>
             </Box>
@@ -80,16 +96,29 @@ function Header() {
           </Box>
 
           <Box marginLeft={2} className={classes.desktopSection}>
-            {navLink.map(({ link, title }, index) => (
-              <NavLink
-                key={index}
-                to={link}
-                className={classes.navLink}
-                activeClassName={classes.navLinkActive}
-                onClick={closeSPMenuHandler}>
-                {title}
-              </NavLink>
-            ))}
+            {navLink.map(({ link, title, protect }, index) => {
+              return !protect ? (
+                <NavLink
+                  key={index}
+                  to={link}
+                  className={classes.navLink}
+                  activeClassName={classes.navLinkActive}
+                  onClick={closeSPMenuHandler}>
+                  {title}
+                </NavLink>
+              ) : (
+                isAuthenticated && (
+                  <NavLink
+                    key={index}
+                    to={link}
+                    className={classes.navLink}
+                    activeClassName={classes.navLinkActive}
+                    onClick={closeSPMenuHandler}>
+                    {title}
+                  </NavLink>
+                )
+              );
+            })}
           </Box>
         </Box>
         <Box display="flex" alignItems="center">
