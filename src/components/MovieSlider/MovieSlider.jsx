@@ -36,7 +36,7 @@ function MovieSlider({ title, subtitle, listMovie, slidesToShow, settings }) {
 
   const newSettings = {
     dots: false,
-    infinite: true,
+    infinite: listMovie.length >= slidesToShow ? true : false,
     speed: 500,
     slidesToShow: slidesToShow,
     slidesToScroll: slidesToShow,
@@ -48,7 +48,7 @@ function MovieSlider({ title, subtitle, listMovie, slidesToShow, settings }) {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
-          infinite: true,
+          infinite: listMovie.length >= 3 ? true : false,
           dots: true,
         },
       },
@@ -58,6 +58,7 @@ function MovieSlider({ title, subtitle, listMovie, slidesToShow, settings }) {
           slidesToShow: 2,
           slidesToScroll: 2,
           initialSlide: 2,
+          infinite: listMovie.length >= 2 ? true : false,
         },
       },
       {
@@ -65,6 +66,7 @@ function MovieSlider({ title, subtitle, listMovie, slidesToShow, settings }) {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
+          infinite: listMovie.length >= 1 ? true : false,
         },
       },
     ],
@@ -84,11 +86,11 @@ function MovieSlider({ title, subtitle, listMovie, slidesToShow, settings }) {
           listMovie.map((movie, index) => (
             <MovieSlideItem
               key={index}
-              id={movie.id}
+              id={movie._id}
               title={movie.title}
-              image={movie.image}
-              genres={movie.genres}
-              resolution={movie.resolution}
+              image={movie.posterUrl}
+              genres={movie.genres?.map((item) => item.name?.toLowerCase())}
+              // resolution={movie.resolution}
               views={movie.views}
             />
           ))}

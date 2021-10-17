@@ -10,7 +10,6 @@ import { mediaGetByPage } from '../../slices/media.slice';
 function Mainvisual() {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [mvError, setMvError] = useState(null);
   const [listMovie, setListMovie] = useState([]);
 
   const getMainvisualItems = useCallback(
@@ -20,12 +19,12 @@ function Mainvisual() {
           mediaGetByPage({
             page: 1,
             limit,
+            sort: 'desc(_id)',
           })
         ).unwrap();
         setListMovie(response.results);
-        console.log(response);
       } catch (error) {
-        setMvError(error);
+        console.log('🚀 ~ file: Mainvisual.jsx ~ line 27 ~ error', error);
       }
     },
     [dispatch]

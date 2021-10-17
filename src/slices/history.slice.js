@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosInstance from '../axios';
 
-export const mediaGetByPage = createAsyncThunk(
-  'media/get',
-  async ({ page, limit, sort }, { rejectWithValue }) => {
+export const getHistory = createAsyncThunk(
+  'history/get',
+  async ({ page, limit }, { rejectWithValue }) => {
     try {
-      return (await axiosInstance.get(`/api/media?page=${page}&limit=${limit}&sort=${sort}`)).data;
+      return (await axiosInstance.get(`/api/history?page=${page}&limit=${limit}`)).data;
     } catch (error) {
       if (!error.response) {
         throw error;
@@ -15,8 +15,8 @@ export const mediaGetByPage = createAsyncThunk(
   }
 );
 
-const mediaSlice = createSlice({
-  name: 'mediaSlice',
+const historySlice = createSlice({
+  name: 'historySlice',
   initialState: {
     isLoading: false,
     totalPages: 0,
@@ -25,13 +25,13 @@ const mediaSlice = createSlice({
     results: [],
   },
   extraReducers: {
-    [mediaGetByPage.pending]: (state) => {
+    [getHistory.pending]: (state) => {
       state.isLoading = true;
     },
-    [mediaGetByPage.rejected]: (state) => {
+    [getHistory.rejected]: (state) => {
       state.isLoading = false;
     },
-    [mediaGetByPage.fulfilled]: (state, action) => {
+    [getHistory.fulfilled]: (state, action) => {
       state.isLoading = false;
       const { totalPages, totalResults, page, results } = action.payload;
       state.totalPages = totalPages;
@@ -42,5 +42,5 @@ const mediaSlice = createSlice({
   },
 });
 
-export const mediaActions = mediaSlice.actions;
-export default mediaSlice;
+export const historyActions = historySlice.actions;
+export default historySlice;

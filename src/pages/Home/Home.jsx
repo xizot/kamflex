@@ -6,120 +6,42 @@ import 'slick-carousel/slick/slick-theme.css';
 import Mainvisual from '../../components/Mainvisual/Mainvisual';
 import MovieSlider from '../../components/MovieSlider/MovieSlider';
 import { useDispatch } from 'react-redux';
-const listMovie = [
-  {
-    id: 1,
-    title: 'Rampage - Out of Control',
-    image: 'https://wallpaperaccess.com/full/522306.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 2,
-    title: 'Transformers',
-    image: 'https://wallpaperaccess.com/full/37949.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 3,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37965.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 4,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37943.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 5,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/517958.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 6,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37969.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 7,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/167696.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 8,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/25915.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 9,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37948.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 10,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37945.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 11,
-    title: '6Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37951.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-  {
-    id: 12,
-    title: 'Fate/stay night [Unlimited Blade Works]',
-    image: 'https://wallpaperaccess.com/full/37965.jpg',
-    description:
-      "The Holy Grail War is a battle royale among seven magi who serve as Masters. Masters, through the use of the command seals they are given when they enter the war, command Heroic Spirits known as Servants to fight for them in battle. In the Fifth Holy Grail War, Rin Tōsaka is among the magi entering the competition. With her Servant, Archer, she hopes to obtain the ultimate prize—the Holy Grail, a magical artifact capable of granting its wielder any wish. One of Rin's classmates, Emiya Shirō, accidentally enters the competition and ends up commanding a Servant of his own known as Saber. As they find themselves facing mutual enemies, Rin and Shirō decide to form a temporary alliance as they challenge their opponents in the Holy Grail War.",
-    genres: ['drama', 'roman', 'action'],
-    views: '7.5',
-  },
-];
+import { mediaGetByPage } from '../../slices/media.slice';
 
 function Home() {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [topLikes, setTopLikes] = useState([]);
+  const [newMovies, setNewMovies] = useState([]);
+  const [topViews, setTopViews] = useState([]);
+  const limit = 20;
+  const getMediaBySort = useCallback(
+    async (sort, type) => {
+      try {
+        const response = await dispatch(
+          mediaGetByPage({
+            page: 1,
+            limit,
+            sort,
+          })
+        ).unwrap();
+        if (type === 'likes') {
+          setTopLikes(response.results);
+        } else if (type === 'views') {
+          setTopViews(response.results);
+        } else if (type === 'new') {
+          setNewMovies(response.results);
+        }
+      } catch (error) {}
+    },
+    [dispatch]
+  );
+
+  useEffect(() => {
+    getMediaBySort('desc(_id)', 'new');
+    getMediaBySort('desc(likes)', 'likes');
+    getMediaBySort('desc(views)', 'views');
+  }, [getMediaBySort]);
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0);
@@ -129,22 +51,25 @@ function Home() {
     <div className={classes.root}>
       <Mainvisual />
       <Container>
-        <Box className={classes.section}>
-          <MovieSlider listMovie={listMovie} title="Best For You" slidesToShow={5} />
-        </Box>
+        {newMovies.length > 0 && (
+          <Box className={classes.section}>
+            <MovieSlider listMovie={newMovies} title="NEW MOVIE" slidesToShow={5} />
+          </Box>
+        )}
+
         <Box className={classes.section}>
           <MovieSlider
-            listMovie={listMovie}
-            subtitle="MOST WATCHED MOVIES BY DAYS"
+            listMovie={topLikes}
+            subtitle="MOST FAVOURITE"
             title="Popular Movies"
             slidesToShow={6}
           />
         </Box>
         <Box className={classes.section}>
           <MovieSlider
-            listMovie={listMovie}
-            subtitle="MOST WATCHED MOVIES BY DAYS"
-            title="Popular TV Shows"
+            listMovie={topViews}
+            subtitle="MOST WATCHED MOVIES"
+            title="Popular Movies"
             slidesToShow={4}
           />
         </Box>

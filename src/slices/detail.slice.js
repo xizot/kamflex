@@ -17,6 +17,17 @@ const detailSlice = createSlice({
   initialState: {
     isLoading: false,
   },
+  extraReducers: {
+    [detailGetById.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [detailGetById.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [detailGetById.fulfilled]: (state) => {
+      state.isLoading = false;
+    },
+  },
 });
 
 export const detailActions = detailSlice.actions;

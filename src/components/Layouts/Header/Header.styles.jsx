@@ -65,4 +65,8 @@ export default makeStyles((theme) => ({
     top: theme.spacing(1),
     color: '#fff',
   },
+  circleIcon: {
+    color: '#fff',
+    marginRight: theme.spacing(1),
+  },
 }));

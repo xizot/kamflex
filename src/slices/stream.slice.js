@@ -17,6 +17,17 @@ const streamSlice = createSlice({
   initialState: {
     isLoading: false,
   },
+  extraReducers: {
+    [streamGetById.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [streamGetById.rejected]: (state) => {
+      state.isLoading = false;
+    },
+    [streamGetById.fulfilled]: (state) => {
+      state.isLoading = false;
+    },
+  },
 });
 
 export const streamActions = streamSlice.actions;

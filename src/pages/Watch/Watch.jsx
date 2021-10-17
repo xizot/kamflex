@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import Plyr from 'plyr';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory, useLocation } from 'react-router-dom';
 import useStyles from './Watch.styles';
 import { useDispatch } from 'react-redux';
 import { streamGetById } from '../../slices/stream.slice';
-import { Button } from '@material-ui/core';
+import { Box, Button, Typography } from '@material-ui/core';
+import { ArrowBackIos } from '@material-ui/icons';
+import { useSelector } from 'react-redux';
+import Requesting from '../../components/Requesting/Requesting';
 let player = null;
 
 function Watch() {
@@ -12,9 +15,18 @@ function Watch() {
   const dispatch = useDispatch();
   const params = useParams();
   const id = params.id;
+  const history = useHistory();
+  const location = useLocation();
+  const isLoading = useSelector((state) => state.stream.isLoading);
 
   const [videoSrc, setVideoSrc] = useState([]);
   const [error, setError] = useState(null);
+
+  const goBackHandler = (e) => {
+    e.preventDefault();
+    history.push(location.state?.from || '/');
+  };
+
   const getMovieStream = useCallback(
     async (id) => {
       setError(null);
@@ -48,12 +60,35 @@ function Watch() {
   }, []);
   return (
     <div className={classes.root}>
-      <Button>Back</Button>
-      <div className={classes.player}>
-        <video id="player" playsInline controls width="100%" height="100%">
-          <source src={videoSrc} />
-        </video>
-      </div>
+      {isLoading && <Requesting />}
+      {!isLoading && error ? (
+        <Box display="flex" flexDirection="column" justifyContent="center">
+          <Typography variant="subtitle1" color="primary" align="center" className={classes.error}>
+            {error}
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<ArrowBackIos />}
+            onClick={(e) => goBackHandler(e)}
+            style={{ width: 150, margin: '20px auto' }}>
+            Go back
+          </Button>
+        </Box>
+      ) : (
+        <div className={classes.player}>
+          <video id="player" playsInline controls width="100%" height="100%">
+            <source src={videoSrc} />
+          </video>
+          <Button
+            variant="text"
+            className={classes.back}
+            startIcon={<ArrowBackIos />}
+            onClick={(e) => goBackHandler(e)}>
+            Back
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

@@ -28,11 +28,11 @@ axiosInstance.interceptors.response.use(
   (error) => {
     const originalRequest = error.config;
     if (error.response.status === 401 && originalRequest._retry) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
       history.push('/login');
       return Promise.reject(error);
-    }
-
-    if (error.response.status === 401 && !originalRequest._retry) {
+    } else if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refreshToken');
       if (!refreshToken) {

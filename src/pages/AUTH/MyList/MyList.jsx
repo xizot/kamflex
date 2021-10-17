@@ -1,24 +1,21 @@
 import { Box, Grid, Typography } from '@material-ui/core';
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import MovieItem from '../../../components/MovieItem/MovieItem';
 import { toast } from 'react-toastify';
-import useStyles from './History.styles';
-import { getHistory } from '../../../slices/history.slice';
+import useStyles from './MyList.styles';
+import { getMyList } from '../../../slices/myList.slice';
 import Pagination from '@material-ui/lab/Pagination';
-import { AccessTime } from '@material-ui/icons';
-import { timeToClient } from '../../../utils/converter';
 
-function History() {
+function MyList() {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const totalPages = useSelector((state) => state.history.totalPages);
-  const totalResults = useSelector((state) => state.history.totalResults);
-  const currentPage = useSelector((state) => state.history.page);
-  const results = useSelector((state) => state.history.results);
-  console.log('🚀 ~ file: History.jsx ~ line 19 ~ History ~ results', results);
+  const totalPages = useSelector((state) => state.mylist.totalPages);
+  const totalResults = useSelector((state) => state.mylist.totalResults);
+  const currentPage = useSelector((state) => state.mylist.page);
+  const results = useSelector((state) => state.mylist.results);
 
   const isLoading = useSelector((state) => state.search.isLoading);
   const [page, setPage] = useState(1);
@@ -29,12 +26,12 @@ function History() {
     setPage(value);
   };
 
-  const getHistoryHandler = useCallback(
+  const getMyListHandler = useCallback(
     async (page, limit) => {
       setError(null);
       try {
         await dispatch(
-          getHistory({
+          getMyList({
             page,
             limit,
           })
@@ -48,12 +45,9 @@ function History() {
   );
 
   useEffect(() => {
-    getHistoryHandler(page, limit);
-  }, [dispatch, page, limit, getHistoryHandler]);
+    getMyListHandler(page, limit);
+  }, [dispatch, page, limit, getMyListHandler]);
 
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
   return (
     <div className={classes.root}>
       <Box padding="0 4%">
@@ -67,18 +61,12 @@ function History() {
         <Grid container spacing={2}>
           {results?.map((movie, index) => (
             <Grid item xs={6} sm={4} md={3} lg={2} key={index} className={classes.section}>
-              <Box className={classes.release} display="flex" flexWrap="wrap" alignItems="center">
-                <AccessTime fontSize="small" className={classes.iconTime} />
-                <Typography variant="body1" className={classes.time}>
-                  {movie.date && timeToClient(movie.date)}
-                </Typography>
-              </Box>
               <MovieItem
-                id={movie.media?._id}
-                title={movie.media?.title}
-                image={movie.media?.posterUrl}
-                description={movie.media?.overview}
-                genres={movie.media?.genres.map((item) => item.name)}
+                id={movie._id}
+                title={movie.title}
+                image={movie.posterUrl}
+                description={movie.overview}
+                genres={movie.genres}
               />
             </Grid>
           ))}
@@ -91,7 +79,7 @@ function History() {
               shape="rounded"
               page={page}
               onChange={pageChangeHandler}
-              count={50}
+              count={totalPages}
             />
           </div>
         )}
@@ -100,4 +88,4 @@ function History() {
   );
 }
 
-export default History;
+export default MyList;

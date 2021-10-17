@@ -22,10 +22,7 @@ function MovieSlideItem({ id, title, image, genres, resolution, releaseDate, vie
           <div className={styles.genres}>
             {genres &&
               genres.map((genre, index) => (
-                <Link
-                  to={`/movie?genre=${genre.toLowerCase()}`}
-                  key={index}
-                  className={styles.genre}>
+                <Link to={`/movie?genre=${genre}`} key={index} className={styles.genre}>
                   {genre} {index !== genres.length - 1 ? ', ' : ''}
                 </Link>
               ))}

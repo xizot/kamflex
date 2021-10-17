@@ -1,5 +1,11 @@
 import { Box, IconButton, Typography } from '@material-ui/core';
-import { Add, PlayArrow, ThumbDownAltOutlined, ThumbUpAltOutlined } from '@material-ui/icons';
+import {
+  Add,
+  PlayArrow,
+  Public,
+  ThumbDownAltOutlined,
+  ThumbUpAltOutlined,
+} from '@material-ui/icons';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import IconLabel from '../UI/IconLabel/IconLabel';
@@ -23,7 +29,7 @@ function MovieItem({ id, title, image, description, genres, resolutions, height 
       <Box display="flex" alignItems="center" flexWrap="wrap" className={classes.frontGenres}>
         {genres &&
           genres.map((genre, index) => (
-            <Link to={`/movie?genre=${genre.toLowerCase()}`} key={index} className={classes.genre}>
+            <Link to={`/movie?genre=${genre?.toLowerCase()}`} key={index} className={classes.genre}>
               {genre}
               {index < genres.length - 1 && ', '}
             </Link>
@@ -31,13 +37,21 @@ function MovieItem({ id, title, image, description, genres, resolutions, height 
       </Box>
       {/* hover */}
       <Link to={`/detail/${id}`} className={classes.front}>
-        <img src={image} alt="" className={classes.frontImage} />
+        <img
+          src={image || process.env.PUBLIC_URL + '/images/default-movie.gif'}
+          alt=""
+          className={classes.frontImage}
+        />
         {/* <Typography variant="caption">{resolutions}</Typography> */}
         <Typography variant="caption" className={classes.frontTitle}>
           {title}
         </Typography>
         <Box boxShadow={6} className={classes.hoverSection}>
-          <img src={image} alt="" className={classes.image} />
+          <img
+            src={image || process.env.PUBLIC_URL + '/images/default-movie.gif'}
+            alt=""
+            className={classes.image}
+          />
           <Box padding="5px 10px 15px">
             <Box display="flex" alignItems="center" flexWrap="wrap" className={classes.actions}>
               <IconButton className={`${classes.playButton} ${classes.actionIcon}`}>

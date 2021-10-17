@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Box, IconButton } from '@material-ui/core';
 import { AppBar, Button, Toolbar } from '@material-ui/core';
 import { Link, NavLink, useHistory } from 'react-router-dom';
-import { Close, Menu, ExitToApp } from '@material-ui/icons';
+import { Close, Menu, ExitToApp, Search, Person } from '@material-ui/icons';
 import useStyles from './Header.styles';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { authActions } from '../../../slices/auth.slice';
+import InputSearch from '../../InputSearch/InputSearch';
 
 const navLink = [
   {
@@ -14,12 +15,12 @@ const navLink = [
     title: 'Movies',
   },
   {
-    link: '/watched',
-    title: 'Watched',
+    link: '/my-list',
+    title: 'My List',
   },
   {
-    link: '/watch-later',
-    title: 'Watch Later',
+    link: '/history',
+    title: 'History',
   },
 ];
 
@@ -91,7 +92,10 @@ function Header() {
             ))}
           </Box>
         </Box>
-        <Box>
+        <Box display="flex" alignItems="center">
+          <Box marginRight={4}>
+            <InputSearch />
+          </Box>
           {!isAuthenticated ? (
             <Link to="/login">
               <Button color="primary" variant="contained">
@@ -99,9 +103,16 @@ function Header() {
               </Button>
             </Link>
           ) : (
-            <Button color="primary" variant="contained" onClick={logoutHandler}>
-              Logout <ExitToApp style={{ marginLeft: 5 }} />
-            </Button>
+            <>
+              <Link to="/account">
+                <IconButton className={classes.circleIcon}>
+                  <Person />
+                </IconButton>
+              </Link>
+              <Button color="primary" variant="contained" onClick={logoutHandler}>
+                Logout <ExitToApp style={{ marginLeft: 5 }} />
+              </Button>
+            </>
           )}
         </Box>
       </Toolbar>

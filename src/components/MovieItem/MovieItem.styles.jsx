@@ -5,7 +5,7 @@ export default makeStyles((theme) => ({
     display: 'block',
     position: 'relative',
     width: '100%',
-    height: (props) => props.height || 150,
+    height: (props) => props.height || 175,
     borderRadius: theme.shape.borderRadius,
     [theme.breakpoints.up('md')]: {
       '&:hover': {

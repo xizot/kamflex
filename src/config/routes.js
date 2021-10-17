@@ -9,6 +9,10 @@ const Register = lazy(() => import('../pages/Register/Register'));
 const ResetPassword = lazy(() => import('../pages/ResetPassword/ResetPassword'));
 const VerifyEmail = lazy(() => import('../pages/VerifyEmail/VerifyEmail'));
 const Watch = lazy(() => import('../pages/Watch/Watch'));
+const Search = lazy(() => import('../pages/Search/Search'));
+const MyList = lazy(() => import('../pages/AUTH/MyList/MyList'));
+const History = lazy(() => import('../pages/AUTH/History/History'));
+const Profile = lazy(() => import('../pages/AUTH/Profile/Profile'));
 
 export const routes = [
   {
@@ -42,7 +46,7 @@ export const routes = [
     component: ResetPassword,
   },
   {
-    path: '/activation',
+    path: '/confirm-email',
     protected: false,
     exact: true,
     component: VerifyEmail,
@@ -64,5 +68,29 @@ export const routes = [
     protected: false,
     exact: true,
     component: Movie,
+  },
+  {
+    path: '/search',
+    protected: false,
+    exact: true,
+    component: Search,
+  },
+  {
+    path: '/my-list',
+    protected: true,
+    exact: true,
+    component: MyList,
+  },
+  {
+    path: '/history',
+    protected: true,
+    exact: true,
+    component: History,
+  },
+  {
+    path: '/account',
+    protected: true,
+    exact: true,
+    component: Profile,
   },
 ];

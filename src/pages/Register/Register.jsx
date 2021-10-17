@@ -147,7 +147,7 @@ function Register() {
           birthdate: moment(birthDate).format('yyyy-MM-DD'),
         })
       ).unwrap();
-      history.push('/activation');
+      history.push('/confirm-email');
       usernameReset();
       emailReset();
       passwordReset();

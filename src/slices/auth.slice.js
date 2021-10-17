@@ -67,7 +67,7 @@ export const sendConfirmEmail = createAsyncThunk(
 );
 
 export const confirmEmail = createAsyncThunk(
-  'auth/sendConfirmEmail',
+  'auth/confirmEmail',
   async ({ id, activationCode }, { rejectWithValue }) => {
     try {
       return (await axiosInstance.post('/api/auth/confirm-email', { id, activationCode })).data;
@@ -118,7 +118,13 @@ const initialState = {
 };
 
 const initReducer = (state) => {
-  state = { ...state, ...initialState, isLoading: true };
+  state.isLoading = true;
+  state.isAuthenticated = false;
+  state.user = {};
+  state.accessToken = null;
+  state.refreshToken = null;
+  localStorage.removeItem('accessToken');
+  localStorage.removeItem('refreshToken');
 };
 
 const authSuccess = (state, action) => {
@@ -144,20 +150,17 @@ const authSlice = createSlice({
       state.accessToken = null;
       state.refreshToken = null;
       state.user = {};
+      localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
     },
   },
   extraReducers: {
-    [login.pending]: (state) => {
-      state.isLoading = true;
-    },
+    [login.pending]: initReducer,
     [login.rejected]: (state) => {
       state.isLoading = false;
     },
     [login.fulfilled]: authSuccess,
-    [register.pending]: (state) => {
-      state.isLoading = true;
-    },
+    [register.pending]: initReducer,
     [register.rejected]: (state) => {
       state.isLoading = false;
     },
@@ -166,7 +169,7 @@ const authSlice = createSlice({
       state.isLoading = true;
     },
     [confirmEmail.rejected]: (state) => {
-      state.isLoading = true;
+      state.isLoading = false;
     },
     [confirmEmail.fulfilled]: authSuccess,
     [forgotPassword.pending]: (state) => {

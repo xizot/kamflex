@@ -81,13 +81,13 @@ function Login() {
 
   if (isAuthenticated) {
     if (user.banned) {
-      return <div>Banned</div>;
+      return <div className={classes.root}>Banned</div>;
     }
     if (user.verified) {
       return <Redirect to={location.state?.from || '/'} />;
     }
     if (!user.verified) {
-      return <Redirect to="/activation" />;
+      return <Redirect to="/confirm-email" />;
     }
   }
   return (

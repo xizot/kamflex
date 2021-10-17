@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Typography,
   FormControl,
@@ -16,13 +16,17 @@ import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import { Sync } from '@material-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { confirmEmail, sendConfirmEmail } from '../../slices/auth.slice';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
+import queryString from 'query-string';
+import Requesting from '../../components/Requesting/Requesting';
 
 function VerifyEmail() {
   const classes = useStyles();
   const isLoading = useSelector((state) => state.auth.isLoading);
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
+  const location = useLocation();
+  const { id, code } = queryString.parse(location.search);
   const history = useHistory();
   const {
     enteredInput: verifyCode,
@@ -32,7 +36,7 @@ function VerifyEmail() {
     inputIsValid: verifyCodeIsvalid,
     hasError: verifyCodeHasError,
     errorMsg: verifyCodeErrorMessage,
-  } = useInput(verifyCodeSchema);
+  } = useInput(verifyCodeSchema, code || '');
 
   const resendConfirmEmailHandler = async () => {
     try {
@@ -43,30 +47,44 @@ function VerifyEmail() {
     }
   };
   const formIsValid = verifyCodeIsvalid;
-
+  const confirmEmailHandler = useCallback(
+    async (id, code) => {
+      console.log(id, code);
+      try {
+        await dispatch(
+          confirmEmail({
+            id,
+            activationCode: code,
+          })
+        ).unwrap();
+        toast.success('Verify successfully. Redirect to home page after 5s...');
+        setTimeout(() => {
+          history.push('/');
+        }, 5000);
+        verifyCodeReset();
+      } catch (error) {
+        toast.error(error);
+      }
+    },
+    [dispatch, history, verifyCodeReset]
+  );
   const formSubmitHandler = async (e) => {
     e.preventDefault();
     if (!formIsValid) {
       return;
     }
-    try {
-      await dispatch(
-        confirmEmail({
-          id: user._id,
-          activationCode: verifyCode,
-        })
-      ).unwrap();
-      toast.success('Verify successfully. Redirect to home page after 5s...');
-      setTimeout(() => {
-        history.push('/');
-      }, 5000);
-      verifyCodeReset();
-    } catch (error) {
-      toast.error(error);
-    }
+    confirmEmailHandler(user._id, verifyCode);
   };
+
+  useEffect(() => {
+    if (id && code) {
+      confirmEmailHandler(id, code);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div className={classes.root}>
+      {isLoading && <Requesting text="Please wait while we verifying your email..." />}
       <div>
         <form className={classes.form} onSubmit={formSubmitHandler}>
           <Typography variant="h6" className={classes.title}>
