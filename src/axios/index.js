@@ -27,16 +27,19 @@ axiosInstance.interceptors.response.use(
   },
   (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && originalRequest._retry) {
+    if (
+      error.response.status === 401 &&
+      (originalRequest._retry || originalRequest.url === `${baseURL}/api/auth/refresh-token`)
+    ) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      history.push('/login');
+      history.push('/logout');
       return Promise.reject(error);
     } else if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const refreshToken = localStorage.getItem('refreshToken');
       if (!refreshToken) {
-        history.push('/login');
+        history.push('/logout');
         return Promise.reject(error);
       }
       return axiosInstance

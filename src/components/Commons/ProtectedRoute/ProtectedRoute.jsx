@@ -18,7 +18,7 @@ function ProtectedRoute(props) {
       />
     );
   }
-  if (user.banned) {
+  if (user?.banned) {
     return (
       <Redirect
         to={{
@@ -27,7 +27,7 @@ function ProtectedRoute(props) {
       />
     );
   }
-  if (!user.verified) {
+  if (user?.verified === false) {
     return (
       <Redirect
         to={{

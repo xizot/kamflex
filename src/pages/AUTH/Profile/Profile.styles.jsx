@@ -74,6 +74,7 @@ export default makeStyles((theme) => ({
   labelAvatar: {
     width: 200,
     height: 200,
+    marginBottom: theme.spacing(2),
     display: 'block',
     position: 'relative',
     '&:hover $avatarHover': {

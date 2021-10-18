@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import Logout from '../pages/Logout/Logout';
 
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword/ForgotPassword'));
 const Home = lazy(() => import('../pages/Home/Home'));
@@ -92,5 +93,11 @@ export const routes = [
     protected: true,
     exact: true,
     component: Profile,
+  },
+  {
+    path: '/logout',
+    protected: false,
+    exact: true,
+    component: Logout,
   },
 ];

@@ -1,5 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { FormControl, TextField, Typography, Grid, Box, FormHelperText } from '@material-ui/core';
+import {
+  FormControl,
+  TextField,
+  Typography,
+  Grid,
+  Box,
+  FormHelperText,
+  Container,
+} from '@material-ui/core';
 import { useInput } from '../../../hooks/user-input';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonLoading from '../../../components/UI/ButtonLoading/ButtonLoading';
@@ -125,192 +133,193 @@ const Profile = ({
 
   return (
     <div className={classes.root}>
-      <Box className={classes.form} boxShadow={3}>
-        <form noValidate autoComplete="off" onSubmit={formSubmitHandler}>
-          <Grid container spacing={2} justifyContent="center">
-            <Grid item xs={12} md={3}>
-              <Box className={classes.handleAvatar}>
-                <input
-                  accept="image/jpeg"
-                  id="avatar"
-                  type="file"
-                  ref={fileRef}
-                  style={{ display: 'none' }}
-                  onChange={(e) => fileChangeHandler(e.target.files[0])}
-                />
-                <div className={classes.labelAvatar}>
-                  <img
-                    src={
-                      newAvatar
-                        ? newAvatar
-                        : pAvatar || process.env.PUBLIC_URL + '/img/default-avatar.png'
-                    }
-                    alt="user avatar"
-                    className={classes.avatar}
+      <Container>
+        <Box className={classes.form} boxShadow={3}>
+          <form noValidate autoComplete="off" onSubmit={formSubmitHandler}>
+            <Grid container spacing={2} justifyContent="center">
+              <Grid item xs={12} md={3}>
+                <Box className={classes.handleAvatar}>
+                  <input
+                    accept="image/jpeg"
+                    id="avatar"
+                    type="file"
+                    ref={fileRef}
+                    style={{ display: 'none' }}
+                    onChange={(e) => fileChangeHandler(e.target.files[0])}
                   />
-                  <div className={`${classes.avatarHover} ${newAvatar ? 'is-show' : ''}`}>
-                    {!newAvatar && (
-                      <Typography variant="caption" component="label" htmlFor="avatar">
-                        Select your avatar
-                      </Typography>
-                    )}
-                    {!modifyLoading && newAvatar && (
-                      <Typography
-                        variant="caption"
-                        component="label"
-                        onClick={removeFileChangeHandler}
-                        className={classes.labelDelete}>
-                        Remove
-                      </Typography>
-                    )}
+                  <div className={classes.labelAvatar}>
+                    <img
+                      src={
+                        newAvatar
+                          ? newAvatar
+                          : pAvatar || process.env.PUBLIC_URL + '/images/default-avatar.png'
+                      }
+                      alt="user avatar"
+                      className={classes.avatar}
+                    />
+                    <div className={`${classes.avatarHover} ${newAvatar ? 'is-show' : ''}`}>
+                      {!newAvatar && (
+                        <Typography variant="caption" component="label" htmlFor="avatar">
+                          Select your avatar
+                        </Typography>
+                      )}
+                      {!modifyLoading && newAvatar && (
+                        <Typography
+                          variant="caption"
+                          component="label"
+                          onClick={removeFileChangeHandler}
+                          className={classes.labelDelete}>
+                          Remove
+                        </Typography>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <ButtonLoading
-                  size="large"
-                  type="button"
-                  fullWidth={false}
-                  isLoading={modifyLoading}
-                  type="submit"
-                  disabled={selectedFile === null}>
-                  Update Avatar
-                </ButtonLoading>
-              </Box>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  error={fullNameHasError}
-                  label="Username"
-                  helperText={fullNameHasError && 'Username is invalid'}
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  value={fullName}
-                  onBlur={fullNameBlurHandler}
-                  onChange={fullNameChangeHandler}
-                  inputProps={{
-                    autoComplete: 'new-password',
-                    form: {
-                      autoComplete: 'off',
-                    },
-                  }}
-                />
-              </FormControl>
-              <FormControl className={classes.formControl}>
-                <TextField
-                  error={emailHasError}
-                  label="Email"
-                  type="email"
-                  helperText={emailHasError && 'Email is invalid'}
-                  required
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  value={email}
-                  onBlur={emailBlurHandler}
-                  onChange={emailChangeHandler}
-                  inputProps={{
-                    autoComplete: 'new-password',
-                    form: {
-                      autoComplete: 'off',
-                    },
-                  }}
-                />
-              </FormControl>
+                  <ButtonLoading
+                    size="large"
+                    type="button"
+                    fullWidth={false}
+                    isLoading={modifyLoading}
+                    disabled={selectedFile === null}>
+                    Update Avatar
+                  </ButtonLoading>
+                </Box>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    error={fullNameHasError}
+                    label="Username"
+                    helperText={fullNameHasError && 'Username is invalid'}
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={fullName}
+                    onBlur={fullNameBlurHandler}
+                    onChange={fullNameChangeHandler}
+                    inputProps={{
+                      autoComplete: 'new-password',
+                      form: {
+                        autoComplete: 'off',
+                      },
+                    }}
+                  />
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                  <TextField
+                    error={emailHasError}
+                    label="Email"
+                    type="email"
+                    helperText={emailHasError && 'Email is invalid'}
+                    required
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={email}
+                    onBlur={emailBlurHandler}
+                    onChange={emailChangeHandler}
+                    inputProps={{
+                      autoComplete: 'new-password',
+                      form: {
+                        autoComplete: 'off',
+                      },
+                    }}
+                  />
+                </FormControl>
 
-              <Typography
-                color="primary"
-                variant="subtitle1"
-                style={{
-                  marginLeft: 'auto',
-                  width: 'fit-content',
-                  whiteSpace: 'nowrap',
-                  textDecoration: 'underline',
-                  cursor: 'pointer',
-                  marginBottom: 10,
-                }}
-                onClick={() => setIsChangePassword((prev) => !prev)}>
-                {isChangePassword ? 'Cancel' : 'Change Password'}
-              </Typography>
-              {isChangePassword && (
-                <>
-                  <FormControl className={classes.formControl}>
-                    <TextField
-                      label="Current password"
-                      type="password"
-                      error={passwordHasError}
-                      helperText={passwordHasError && 'Password is invalid'}
-                      fullWidth
-                      size="small"
-                      variant="outlined"
-                      value={password}
-                      onBlur={passwordBlurHandler}
-                      onChange={passwordChangeHandler}
-                      inputProps={{
-                        autoComplete: 'new-password',
-                        form: {
-                          autoComplete: 'off',
-                        },
-                      }}
-                    />
-                  </FormControl>
-                  <FormControl className={classes.formControl}>
-                    <TextField
-                      label="New password"
-                      type="password"
-                      error={newPasswordHasError}
-                      helperText={newPasswordHasError && 'New password is invalid'}
-                      fullWidth
-                      size="small"
-                      variant="outlined"
-                      value={newPassword}
-                      onBlur={newPasswordBlurHandler}
-                      onChange={newPasswordChangeHandler}
-                      inputProps={{
-                        autoComplete: 'new-password',
-                        form: {
-                          autoComplete: 'off',
-                        },
-                      }}
-                    />
-                  </FormControl>
-                  <FormControl className={classes.formControl}>
-                    <TextField
-                      label="Confirm password"
-                      type="password"
-                      error={confirmPasswordHasError}
-                      helperText={confirmPasswordHasError && 'Password is not match'}
-                      fullWidth
-                      size="small"
-                      variant="outlined"
-                      value={confirmPassword}
-                      onBlur={confirmPasswordBlurHandler}
-                      onChange={confirmPasswordChangeHandler}
-                      inputProps={{
-                        autoComplete: 'new-password',
-                        form: {
-                          autoComplete: 'off',
-                        },
-                      }}
-                    />
-                  </FormControl>
-                </>
-              )}
-              <ButtonLoading
-                isLoading={basicLoading}
-                fullWidth
-                type="submit"
-                disabled={
-                  !formIsValid ||
-                  (isChangePassword &&
-                    (!passwordIsValid || !newPasswordIsValid || !confirmPasswordIsValid))
-                }>
-                {'Change information'}
-              </ButtonLoading>
+                <Typography
+                  color="primary"
+                  variant="subtitle1"
+                  style={{
+                    marginLeft: 'auto',
+                    width: 'fit-content',
+                    whiteSpace: 'nowrap',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    marginBottom: 10,
+                  }}
+                  onClick={() => setIsChangePassword((prev) => !prev)}>
+                  {isChangePassword ? 'Cancel' : 'Change Password'}
+                </Typography>
+                {isChangePassword && (
+                  <>
+                    <FormControl className={classes.formControl}>
+                      <TextField
+                        label="Current password"
+                        type="password"
+                        error={passwordHasError}
+                        helperText={passwordHasError && 'Password is invalid'}
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        value={password}
+                        onBlur={passwordBlurHandler}
+                        onChange={passwordChangeHandler}
+                        inputProps={{
+                          autoComplete: 'new-password',
+                          form: {
+                            autoComplete: 'off',
+                          },
+                        }}
+                      />
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                      <TextField
+                        label="New password"
+                        type="password"
+                        error={newPasswordHasError}
+                        helperText={newPasswordHasError && 'New password is invalid'}
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        value={newPassword}
+                        onBlur={newPasswordBlurHandler}
+                        onChange={newPasswordChangeHandler}
+                        inputProps={{
+                          autoComplete: 'new-password',
+                          form: {
+                            autoComplete: 'off',
+                          },
+                        }}
+                      />
+                    </FormControl>
+                    <FormControl className={classes.formControl}>
+                      <TextField
+                        label="Confirm password"
+                        type="password"
+                        error={confirmPasswordHasError}
+                        helperText={confirmPasswordHasError && 'Password is not match'}
+                        fullWidth
+                        size="small"
+                        variant="outlined"
+                        value={confirmPassword}
+                        onBlur={confirmPasswordBlurHandler}
+                        onChange={confirmPasswordChangeHandler}
+                        inputProps={{
+                          autoComplete: 'new-password',
+                          form: {
+                            autoComplete: 'off',
+                          },
+                        }}
+                      />
+                    </FormControl>
+                  </>
+                )}
+                <ButtonLoading
+                  isLoading={basicLoading}
+                  fullWidth
+                  type="submit"
+                  disabled={
+                    !formIsValid ||
+                    (isChangePassword &&
+                      (!passwordIsValid || !newPasswordIsValid || !confirmPasswordIsValid))
+                  }>
+                  {'Change information'}
+                </ButtonLoading>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Box>
+          </form>
+        </Box>
+      </Container>
     </div>
   );
 };

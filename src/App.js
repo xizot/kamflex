@@ -50,7 +50,7 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (user.verified === false) {
+    if (user?.verified === false) {
       console.log(user.verified);
       return history.push('/confirm-email');
     }
