@@ -1,11 +1,9 @@
-import { Box, Button, Container, FormControl, TextField, Typography } from '@material-ui/core';
+import { Box, Button, Container, Typography } from '@material-ui/core';
 import { AccessTime, Add, PlayArrow, ThumbDownAlt, ThumbUpAlt } from '@material-ui/icons';
 import React, { useCallback, useEffect, useLayoutEffect, useState } from 'react';
 import { useParams, useHistory, Link } from 'react-router-dom';
-// import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import useStyles from './MovieDetail.styles';
 import Plyr from 'plyr';
-// import CommentItem from '../../components/CommentItem/CommentItem';
 import Requesting from '../../components/Requesting/Requesting';
 import { useDispatch } from 'react-redux';
 import { detailGetById } from '../../slices/detail.slice';
@@ -136,6 +134,7 @@ function MovieDetail() {
 
   useEffect(() => {
     const trailers = detail.videos;
+    console.log(trailers);
     if (trailers?.length) {
       if (player) player.destroy();
       const playerDOM = document.getElementById('player');
@@ -145,8 +144,10 @@ function MovieDetail() {
         type: 'video',
         sources: [
           {
-            src: trailers[0].key,
-            provider: trailers[0].site?.toLowerCase(),
+            // src: trailers[0].key,
+            // provider: trailers[0].site?.toLowerCase(),
+            src: 'PgkTGVVRkLU',
+            provider: 'youtube',
           },
         ],
       };

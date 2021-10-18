@@ -12,7 +12,6 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { authActions } from './slices/auth.slice';
-import { HistoryOutlined } from '@material-ui/icons';
 const theme = createTheme({
   palette: {
     primary: {
