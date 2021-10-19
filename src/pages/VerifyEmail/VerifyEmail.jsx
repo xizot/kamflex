@@ -58,9 +58,7 @@ function VerifyEmail() {
           })
         ).unwrap();
         toast.success('Verify successfully. Redirect to home page after 5s...');
-        setTimeout(() => {
-          history.push(location.state?.from || '/');
-        }, 5000);
+        history.push(location.state?.from || '/');
         verifyCodeReset();
       } catch (error) {
         toast.error(error);

@@ -27,7 +27,7 @@ function Register() {
   const [showRetypePassword, setShowRetypePassword] = useState(false);
   const isLoading = useSelector((state) => state.auth.isLoading);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [birthDate, setBirthDate] = React.useState(new Date());
+  const [birthDate, setBirthDate] = useState(new Date());
   const [birthError, setBirthError] = useState(null);
   const [isNotMatch, setIsNotMatch] = useState(true);
 
@@ -224,7 +224,7 @@ function Register() {
                   label="Birth day"
                   format="MM/DD/yyyy"
                   // minDate={minDate}
-                  // maxDate={maxDate}
+                  maxDate={new Date()}
                   value={birthDate}
                   onChange={handleDateChange}
                   error={false}

@@ -7,6 +7,7 @@ import myListSlice from '../slices/myList.slice';
 import searchSlice from '../slices/search.slice';
 import streamSlice from '../slices/stream.slice';
 import ratingSlice from '../slices/rating.slice';
+import userSlice from '../slices/user.slice';
 
 export default configureStore({
   reducer: {
@@ -18,5 +19,6 @@ export default configureStore({
     mylist: myListSlice.reducer,
     history: historySlice.reducer,
     rating: ratingSlice.reducer,
+    userInfo: userSlice.reducer,
   },
 });

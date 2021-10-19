@@ -23,7 +23,7 @@ function MovieDetail() {
   const [detail, setDetail] = useState({});
   const isLoading = useSelector((state) => state.detail.isLoading);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const [kind, setKind] = useState(0);
+  const [kind, setKind] = useState(null);
   const [added, setAdded] = useState(false);
 
   const getRatingHandler = useCallback(
@@ -34,7 +34,7 @@ function MovieDetail() {
             media: id,
           })
         ).unwrap();
-        setKind(response.kind || 0);
+        setKind(response.kind || null);
       } catch (error) {
         console.log('🚀 ~ file: MovieDetail.jsx ~ line 39 ~ getRatingHandler ~ error', error);
       }
@@ -72,7 +72,7 @@ function MovieDetail() {
 
   const ratingHandler = useCallback(
     async (id, rate) => {
-      if (rate === kind) return;
+      if (rate === kind) rate = 0;
       try {
         await dispatch(
           rating({
@@ -84,16 +84,25 @@ function MovieDetail() {
         let currentLikes = detail.likes || 0;
         let currentDislikes = detail.dislikes || 0;
 
-        if (kind === 0) {
-          currentLikes = rate === 1 ? currentLikes + 1 : currentLikes;
-          currentDislikes = rate === 2 ? currentDislikes + 1 : currentDislikes;
-        } else if (kind === 1) {
-          currentLikes = currentLikes - 1;
-          currentDislikes = currentDislikes + 1;
-        } else if (kind === 2) {
-          currentLikes = currentLikes + 1;
-          currentDislikes = currentDislikes - 1;
+        if (rate !== 0) {
+          if (!kind) {
+            currentLikes = rate === 1 ? currentLikes + 1 : currentLikes;
+            currentDislikes = rate === 2 ? currentDislikes + 1 : currentDislikes;
+          } else if (kind === 1) {
+            currentLikes = currentLikes - 1;
+            currentDislikes = currentDislikes + 1;
+          } else if (kind === 2) {
+            currentLikes = currentLikes + 1;
+            currentDislikes = currentDislikes - 1;
+          }
+        } else {
+          if (kind === 1) {
+            currentLikes = currentLikes - 1;
+          } else if (kind === 2) {
+            currentDislikes = currentDislikes - 1;
+          }
         }
+
         setDetail((prev) => ({ ...prev, likes: currentLikes, dislikes: currentDislikes }));
         setKind(rate);
       } catch (error) {

@@ -1,41 +1,45 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FormControl,
   TextField,
   Typography,
   Grid,
   Box,
-  FormHelperText,
   Container,
+  FormControlLabel,
+  Switch,
 } from '@material-ui/core';
 import { useInput } from '../../../hooks/user-input';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonLoading from '../../../components/UI/ButtonLoading/ButtonLoading';
 import { toast } from 'react-toastify';
 import useStyles from './Profile.styles';
-import { emailSchema, passwordschema } from '../../../schemas';
+import { emailSchema, passwordschema, usernameSchema } from '../../../schemas';
+import { getUser, updateUser } from '../../../slices/user.slice';
+import moment from 'moment';
+import MomentUtils from '@date-io/moment';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-const Profile = ({
-  accId,
-
-  pAvatar,
-  onUpdateNewData,
-  onChangeDetails,
-}) => {
+const Profile = ({ accId, pAvatar, onUpdateNewData, onChangeDetails }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const modifyLoading = false;
+  // const modifyLoading = false;
+  const user = useSelector((state) => state.auth.user);
+  const userInfo = useSelector((state) => state.userInfo.info);
   const basicLoading = false;
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [newAvatar, setNewAvatar] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
+  // const [newAvatar, setNewAvatar] = useState(null);
   const [isChangePassword, setIsChangePassword] = useState(false);
-  const fileRef = useRef();
+  const [isChanged, setIsChanged] = useState(false);
+  const [isChangeEmail, setIsChangeEmail] = useState(false);
+  // const fileRef = useRef();
   const {
     enteredInput: email,
     hasError: emailHasError,
     inputBlurHandler: emailBlurHandler,
     inputChangeHandler: emailChangeHandler,
     inputIsValid: emailIsValid,
+    setEnteredInput: setEmail,
   } = useInput(emailSchema);
   const {
     enteredInput: password,
@@ -63,81 +67,126 @@ const Profile = ({
   } = useInput(passwordschema);
 
   const {
-    enteredInput: fullName,
-    hasError: fullNameHasError,
-    inputBlurHandler: fullNameBlurHandler,
-    inputChangeHandler: fullNameChangeHandler,
-    inputIsValid: fullNameIsValid,
-  } = useInput(emailSchema);
-
-  const fileChangeHandler = (file) => {
-    setSelectedFile(file || null);
+    enteredInput: username,
+    hasError: usernameHasError,
+    inputBlurHandler: usernameBlurHandler,
+    inputChangeHandler: usernameChangeHandler,
+    inputIsValid: usernameIsValid,
+    setEnteredInput: setUsername,
+  } = useInput(usernameSchema);
+  const [birthDate, setBirthDate] = useState(new Date());
+  const handleDateChange = (date) => {
+    setBirthDate(date);
   };
 
-  const removeFileChangeHandler = () => {
-    fileRef.current.value = '';
-    setSelectedFile(null);
+  const getUserHandler = useCallback(
+    async (id) => {
+      try {
+        await dispatch(getUser(id)).unwrap();
+      } catch (error) {
+        toast.error(error);
+      }
+    },
+    [dispatch]
+  );
+
+  const isChangeEmailOrUsernameHandler = (event) => {
+    setIsChangeEmail(event.target.checked);
   };
 
-  const insertOrUpdateAvatarHandler = async () => {
-    console.log('here', selectedFile);
-    let formData = new FormData();
-    if (selectedFile === null) return;
-    formData.append('accId', accId);
-    formData.append('image', selectedFile);
-    try {
-      onUpdateNewData({ accAvatar: selectedFile });
-      onChangeDetails({ accAvatar: newAvatar });
-      setSelectedFile(null);
-      setNewAvatar(null);
-      toast.success('Cập nhật ảnh thành công');
-    } catch (error) {
-      toast.error(error);
-    }
-  };
+  // const fileChangeHandler = (file) => {
+  //   setSelectedFile(file || null);
+  // };
 
-  const formIsValid = emailIsValid && fullNameIsValid;
+  // const removeFileChangeHandler = () => {
+  //   fileRef.current.value = '';
+  //   setSelectedFile(null);
+  // };
+
+  useEffect(() => {
+    setEmail(userInfo?.email || '');
+    setUsername(userInfo?.username || '');
+    setBirthDate(new Date(userInfo?.birthdate) || '');
+  }, [userInfo, setEmail, setUsername, setBirthDate]);
+
+  // const insertOrUpdateAvatarHandler = async () => {
+  //   console.log('here', selectedFile);
+  //   let formData = new FormData();
+  //   if (selectedFile === null) return;
+  //   formData.append('accId', accId);
+  //   formData.append('image', selectedFile);
+  //   try {
+  //     onUpdateNewData({ accAvatar: selectedFile });
+  //     onChangeDetails({ accAvatar: newAvatar });
+  //     setSelectedFile(null);
+  //     setNewAvatar(null);
+  //     toast.success('Cập nhật ảnh thành công');
+  //   } catch (error) {
+  //     toast.error(error);
+  //   }
+  // };
+
+  const formIsValid = emailIsValid && usernameIsValid;
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
     if (!formIsValid) return;
 
     let data = {
-      accId: +accId,
-      accEmail: email,
-      accFullName: fullName,
+      id: userInfo._id,
+      birthdate: moment(birthDate).format('yyyy-MM-DD'),
     };
 
+    if (isChangeEmail) {
+      data.email = email;
+      data.username = username;
+      data.currentPassword = password;
+    }
     if (isChangePassword) {
       if (!passwordIsValid || !newPasswordIsValid || !confirmPasswordIsValid) {
         return;
       } else {
-        data = {
-          ...data,
-          accOldPassword: password,
-          accNewPassword: newPassword,
-          accConfirmPassword: confirmPassword,
-        };
+        data.currentPassword = password;
+        data.password = newPassword;
       }
     }
-
     try {
-      onUpdateNewData(data);
+      await dispatch(updateUser(data)).unwrap();
+      toast.success('Update account successfully');
+      getUser(data.id);
       passwordReset();
-      newPasswordReset();
       confirmPasswordReset();
+      newPasswordReset();
     } catch (error) {
       toast.error(error);
     }
   };
 
+  useEffect(() => {
+    if (user?._id) {
+      getUserHandler(user._id);
+    }
+  }, [getUserHandler, user]);
+
+  useEffect(() => {
+    if (
+      email !== userInfo?.email ||
+      username !== userInfo?.username ||
+      new Date(birthDate).toDateString() !== new Date(userInfo.birthdate).toDateString() ||
+      password.length > 0
+    ) {
+      setIsChanged(true);
+    } else {
+      setIsChanged(false);
+    }
+  }, [email, username, birthDate, password, userInfo]);
   return (
     <div className={classes.root}>
       <Container>
         <Box className={classes.form} boxShadow={3}>
           <form noValidate autoComplete="off" onSubmit={formSubmitHandler}>
             <Grid container spacing={2} justifyContent="center">
-              <Grid item xs={12} md={3}>
+              {/* <Grid item xs={12} md={3}>
                 <Box className={classes.handleAvatar}>
                   <input
                     accept="image/jpeg"
@@ -183,24 +232,39 @@ const Profile = ({
                     Update Avatar
                   </ButtonLoading>
                 </Box>
-              </Grid>
+              </Grid> */}
+
               <Grid item xs={12} md={6}>
                 <FormControl className={classes.formControl}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        color="primary"
+                        checked={isChangeEmail}
+                        onChange={(e) => isChangeEmailOrUsernameHandler(e)}
+                        name="checkedA"
+                      />
+                    }
+                    label="Change email or username"
+                  />
+                </FormControl>
+                <FormControl className={classes.formControl}>
                   <TextField
-                    error={fullNameHasError}
+                    error={usernameHasError}
                     label="Username"
-                    helperText={fullNameHasError && 'Username is invalid'}
+                    helperText={usernameHasError && 'Username is invalid'}
                     fullWidth
                     size="small"
                     variant="outlined"
-                    value={fullName}
-                    onBlur={fullNameBlurHandler}
-                    onChange={fullNameChangeHandler}
+                    value={username}
+                    onBlur={usernameBlurHandler}
+                    onChange={usernameChangeHandler}
                     inputProps={{
                       autoComplete: 'new-password',
                       form: {
                         autoComplete: 'off',
                       },
+                      readOnly: !isChangeEmail,
                     }}
                   />
                 </FormControl>
@@ -222,10 +286,60 @@ const Profile = ({
                       form: {
                         autoComplete: 'off',
                       },
+                      readOnly: !isChangeEmail,
                     }}
                   />
                 </FormControl>
-
+                <div className={classes.formControl}>
+                  <MuiPickersUtilsProvider utils={MomentUtils}>
+                    <FormControl
+                      error={passwordHasError}
+                      variant="outlined"
+                      fullWidth
+                      className={classes.formControl}>
+                      <KeyboardDatePicker
+                        className={classes.datePicker}
+                        label="Birth day"
+                        size="small"
+                        format="MM/DD/yyyy"
+                        maxDate={new Date()}
+                        value={birthDate}
+                        onChange={handleDateChange}
+                        error={false}
+                        helperText={null}
+                        autoOk
+                        fullWidth
+                        variant="inline"
+                        inputVariant="outlined"
+                        KeyboardButtonProps={{
+                          'aria-label': 'change date',
+                        }}
+                      />
+                    </FormControl>
+                  </MuiPickersUtilsProvider>
+                </div>
+                {isChangeEmail && !isChangePassword && (
+                  <FormControl className={classes.formControl}>
+                    <TextField
+                      label="Current password"
+                      type="password"
+                      error={passwordHasError}
+                      helperText={passwordHasError && 'Password is invalid'}
+                      fullWidth
+                      size="small"
+                      variant="outlined"
+                      value={password}
+                      onBlur={passwordBlurHandler}
+                      onChange={passwordChangeHandler}
+                      inputProps={{
+                        autoComplete: 'new-password',
+                        form: {
+                          autoComplete: 'off',
+                        },
+                      }}
+                    />
+                  </FormControl>
+                )}
                 <Typography
                   color="primary"
                   variant="subtitle1"
@@ -240,6 +354,7 @@ const Profile = ({
                   onClick={() => setIsChangePassword((prev) => !prev)}>
                   {isChangePassword ? 'Cancel' : 'Change Password'}
                 </Typography>
+
                 {isChangePassword && (
                   <>
                     <FormControl className={classes.formControl}>
@@ -311,7 +426,8 @@ const Profile = ({
                   disabled={
                     !formIsValid ||
                     (isChangePassword &&
-                      (!passwordIsValid || !newPasswordIsValid || !confirmPasswordIsValid))
+                      (!passwordIsValid || !newPasswordIsValid || !confirmPasswordIsValid)) ||
+                    !isChanged
                   }>
                   {'Change information'}
                 </ButtonLoading>

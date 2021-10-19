@@ -12,14 +12,12 @@ import { useInput } from '../../hooks/user-input';
 import { emailSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import { toast } from 'react-toastify';
 import { forgotPassword } from '../../slices/auth.slice';
 
 function ForgotPassword() {
   const classes = useStyles();
   const isLoading = useSelector((state) => state.auth.isLoading);
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const {

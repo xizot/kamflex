@@ -73,7 +73,7 @@ function MovieItem({
   const ratingHandler = useCallback(
     async (e, id, rate) => {
       e.preventDefault();
-      if (rate === kind) return;
+      if (rate === kind) rate = 0;
       try {
         await dispatch(
           rating({

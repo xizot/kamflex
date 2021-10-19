@@ -69,6 +69,9 @@ const myListSlice = createSlice({
   reducers: {
     removeItem: (state, action) => {
       state.results = state.results.filter((item) => item.media._id !== action.payload);
+      if (state.results.length === 0 && state.totalPages !== 0) {
+        state.totalPages = state.totalPages - 1;
+      }
     },
   },
   extraReducers: {

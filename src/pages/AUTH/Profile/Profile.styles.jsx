@@ -3,6 +3,9 @@ export default makeStyles((theme) => ({
   root: {
     minHeight: '100vh',
     paddingTop: '20vh',
+    '& input[readonly]': {
+      background: '#ddd',
+    },
   },
   content: {
     padding: '20vh 0',

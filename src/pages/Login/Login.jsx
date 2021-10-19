@@ -104,7 +104,7 @@ function Login() {
               fullWidth
               className={classes.textField}>
               <InputLabel htmlFor="email" className={classes.inputLabel}>
-                email
+                Email
               </InputLabel>
               <FilledInput
                 value={email}
