@@ -49,8 +49,7 @@ function App() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (user?.verified === false) {
-      console.log(user.verified);
+    if (user?.verified === false && !location.pathname.includes('/confirm-email')) {
       return history.push('/confirm-email');
     }
   }, [user, history, location.pathname]);

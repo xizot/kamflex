@@ -293,7 +293,7 @@ function Register() {
                 value={confirmpassword}
                 onBlur={confirmpasswordBlurHandler}
                 onChange={confirmPasswordOnChangeHandler}
-                id="password"
+                id="retype-password"
                 type={showRetypePassword ? 'text' : 'password'}
                 className={classes.inputField}
                 endAdornment={

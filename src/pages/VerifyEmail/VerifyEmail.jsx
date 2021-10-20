@@ -57,7 +57,7 @@ function VerifyEmail() {
             activationCode: code,
           })
         ).unwrap();
-        toast.success('Verify successfully. Redirect to home page after 5s...');
+        toast.success('Verify successfully!!!');
         history.push(location.state?.from || '/');
         verifyCodeReset();
       } catch (error) {
