@@ -40,8 +40,8 @@ function VerifyEmail() {
 
   const resendConfirmEmailHandler = async () => {
     try {
-      const reponse = await dispatch(sendConfirmEmail()).unwrap();
-      toast.success(reponse.message);
+      await dispatch(sendConfirmEmail()).unwrap();
+      toast.success('A confirmation email has been sent');
     } catch (error) {
       toast.error(error);
     }
