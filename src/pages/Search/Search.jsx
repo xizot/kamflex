@@ -60,7 +60,7 @@ function Search() {
     <div className={classes.root}>
       <Box padding="0 4%">
         {!results || results?.length === 0 ? (
-          <Typography style={{ textAlign: 'center' }}>
+          <Typography style={{ textAlign: 'center' }} color="primary">
             {error
               ? error
               : `There were no results matching your search "${query}". Try entering another keyword`}

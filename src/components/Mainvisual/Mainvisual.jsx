@@ -60,7 +60,7 @@ function Mainvisual() {
         {listMovie.map((movie, index) => (
           <div className={classes.sliderItem} key={index}>
             <div className={classes.sliderImage}>
-              <img src={movie.posterUrl} alt="" />
+              <img src={movie.backdropUrl} alt="" />
             </div>
             <Box className={classes.sliderInfo}>
               <Container>

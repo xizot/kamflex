@@ -116,6 +116,7 @@ function MovieDetail() {
       try {
         const response = await dispatch(detailGetById(id)).unwrap();
         setDetail(response);
+        console.log('🚀 ~ file: MovieDetail.jsx ~ line 119 ~ response)', response);
       } catch (error) {
         setError(error);
       }
@@ -143,7 +144,6 @@ function MovieDetail() {
 
   useEffect(() => {
     const trailers = detail.videos;
-    console.log(trailers);
     if (trailers?.length) {
       if (player) player.destroy();
       const playerDOM = document.getElementById('player');
@@ -252,14 +252,17 @@ function MovieDetail() {
                 {detail.overview}
               </Typography>
             </Box>
-            <Box className={classes.section} data-aos="fade-up">
-              <Typography ratingiant="h5" color="primary" className={classes.subtitle}>
-                Offical Trailer:
-              </Typography>
-              <div className={classes.playerWrapper}>
-                <video id="player" playsInline controls />
-              </div>
-            </Box>
+            {detail?.videos?.length > 0 && (
+              <Box className={classes.section} data-aos="fade-up">
+                <Typography ratingiant="h5" color="primary" className={classes.subtitle}>
+                  Offical Trailer:
+                </Typography>
+                <div className={classes.playerWrapper}>
+                  <video id="player" playsInline controls />
+                </div>
+              </Box>
+            )}
+
             {/* <Box className={classes.section} data-aos="fade-up">
               <Typography ratingiant="h5" color="primary" className={classes.subtitle}>
                 Comment
