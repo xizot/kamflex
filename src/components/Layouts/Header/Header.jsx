@@ -91,7 +91,7 @@ function Header() {
             </Box>
 
             <Link to="/" className={classes.logo}>
-              PhimChua
+              KamFlex
             </Link>
           </Box>
 

@@ -16,7 +16,11 @@ function MovieSlideItem({ id, title, image, genres, resolution, releaseDate, vie
           </Typography>
         </div>
         <Link to={`/detail/${id}`}>
-          <img src={image} alt={title} className={styles.image} />
+          <img
+            src={image || process.env.PUBLIC_URL + '/images/default-movie.gif'}
+            alt={title}
+            className={styles.image}
+          />
         </Link>
         <div className={styles.hoverSection}>
           <div className={styles.genres}>
