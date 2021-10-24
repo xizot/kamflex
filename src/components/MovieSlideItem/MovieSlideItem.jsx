@@ -41,7 +41,7 @@ function MovieSlideItem({ id, title, image, genres, resolution, releaseDate, vie
           )}
         </div>
       </div>
-      <Link to={`/movie/${id}`} className={styles.bottom}>
+      <Link to={`/detail/${id}`} className={styles.bottom}>
         <Typography variant="body1" className={styles.title}>
           {title}
         </Typography>
