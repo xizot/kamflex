@@ -153,10 +153,10 @@ function MovieDetail() {
         type: 'video',
         sources: [
           {
-            // src: trailers[0].key,
-            // provider: trailers[0].site?.toLowerCase(),
-            src: 'PgkTGVVRkLU',
-            provider: 'youtube',
+            src: trailers[0].key,
+            provider: trailers[0].site?.toLowerCase(),
+            // src: 'PgkTGVVRkLU',
+            // provider: 'youtube',
           },
         ],
       };
