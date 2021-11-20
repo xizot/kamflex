@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+import Banned from '../pages/Banned/Banned';
 import Logout from '../pages/Logout/Logout';
 
 const ForgotPassword = lazy(() => import('../pages/ForgotPassword/ForgotPassword'));
@@ -27,6 +28,12 @@ export const routes = [
     protected: false,
     exact: true,
     component: Login,
+  },
+  {
+    path: '/banned',
+    protected: false,
+    exact: true,
+    component: Banned,
   },
   {
     path: '/register',

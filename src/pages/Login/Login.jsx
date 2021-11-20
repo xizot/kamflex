@@ -18,6 +18,7 @@ import { passwordschema, emailSchema } from '../../schemas';
 import ButtonLoading from '../../components/UI/ButtonLoading/ButtonLoading';
 import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../slices/auth.slice';
+import { toast } from 'react-toastify';
 
 function Login() {
   const classes = useStyles();
@@ -75,13 +76,14 @@ function Login() {
       //vghuy17ck1@gmail.com
       //Abcxyz123
     } catch (error) {
+      toast.error(error);
       setError(error);
     }
   };
 
   if (isAuthenticated) {
     if (user.banned) {
-      return <div className={classes.root}>Banned</div>;
+      return <Redirect to="/banned" />;
     }
     if (user.verified) {
       return <Redirect to={location.state?.from || '/'} />;
